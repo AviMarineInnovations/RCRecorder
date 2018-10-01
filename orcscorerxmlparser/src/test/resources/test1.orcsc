@@ -1,0 +1,66 @@
+<event>
+  <Event>
+    <ROW>
+      <EventName>Test</EventName>
+      <EventFolder>C:\programing\RaceCommittee\orcsc files</EventFolder>
+    </ROW>
+  </Event>
+  <Fleet/>
+  <Cls>
+    <ROW>
+      <ClassId>Id1</ClassId>
+      <ClassName>Name1</ClassName>
+      <Discards>12</Discards>
+      <DivFromOverall>true</DivFromOverall>
+      <TimeLimitFormulae>Trie,"GPH * 15 * 1.5"</TimeLimitFormulae>
+      <ResultScoring>0</ResultScoring>
+      <UseBoatIW>true</UseBoatIW>
+    </ROW>
+  </Cls>
+  <Divs/>
+  <Course>
+    <ROW>
+      <CourseNo>22</CourseNo>
+      <CourseName>Course 23</CourseName>
+      <CourseId>1</CourseId>
+    </ROW>
+  </Course>
+  <Race>
+    <ROW>
+      <RaceId>1</RaceId>
+      <RaceName>Race1</RaceName>
+      <StartTime>2018-10-01T15:00:00.000</StartTime>
+      <ClassId>Id1</ClassId>
+      <Distance>12.33</Distance>
+      <CourseId>1</CourseId>
+      <Provisional>true</Provisional>
+      <ScoringType>102</ScoringType>
+      <Discardable>true</Discardable>
+      <Coeff>1.22</Coeff>
+    </ROW>
+  </Race>
+  <Rslt/>
+  <Legs>
+    <ROW>
+      <Distance>12</Distance>
+      <Course>20</Course>
+      <WindDirection>13</WindDirection>
+      <WindSpeed>22</WindSpeed>
+      <PDCourse>3</PDCourse>
+      <CourseId>1</CourseId>
+    </ROW>
+    <ROW>
+      <Distance>22.33</Distance>
+      <Course>36.5</Course>
+      <WindDirection>25.2</WindDirection>
+      <WindSpeed>25.455</WindSpeed>
+      <PDCourse>0</PDCourse>
+      <CourseId>1</CourseId>
+    </ROW>
+  </Legs>
+  <reports>
+    <logo name="left" filename="" mediatype="image/"></logo>
+    <logo name="center" filename="" mediatype="image/"></logo>
+    <logo name="right" filename="" mediatype="image/"></logo>
+  </reports>
+</event>

@@ -1,0 +1,16 @@
+<resources>
+  <string name="app_name">AVI Race Committee</string>
+  <string name="title_activity_race_input">RaceInputActivity</string>
+  <string name="tab_text_1">Check-in</string>
+  <string name="tab_text_2">OCS</string>
+  <string name="tab_text_3">Finish</string>
+  <string name="action_settings">Settings</string>
+  <string name="radio_sail_no">Sail No</string>
+  <string name="radio_bow_no">Bow No</string>
+  <string name="radio_boat_name">Boat name</string>
+  <string name="title_activity_temp">tempActivity</string>
+  <string name="section_format">Hello World from section: %1$d</string>
+  <string name="action_sortby_sail">Sortby Sail No</string>
+  <string name="action_sortby_bow">Sortby Bow No</string>
+  <string name="action_sortby_name">Sortby Boat Name</string>
+</resources>

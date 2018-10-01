@@ -12,6 +12,7 @@
 *.apk
 ######Avi Sail Race Specific keys and values#######
 keystore.properties
+google-services.json
 /app/src/release/google-services.json
 /app/src/debug/google-services.json
 /app/src/debuggableRelease/google-services.json

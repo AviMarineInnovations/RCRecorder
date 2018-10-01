@@ -1,5 +1,6 @@
 package in.avimarine.racecommittee;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 import in.avimarine.orcscorerxmlparser.Orcsc.FleetRow;
 import in.avimarine.orcscorerxmlparser.Orcsc.OrcscFile;
@@ -7,6 +8,7 @@ import in.avimarine.orcscorerxmlparser.OrcscDeserializer;
 import in.avimarine.racecommittee.objects.Boat;
 import java.util.ArrayList;
 import java.util.List;
+import org.jetbrains.annotations.Contract;
 
 /**
  * This file is part of an Avi Marine Innovations project: RaceCommittee first created by aayaffe on
@@ -15,6 +17,7 @@ import java.util.List;
 class OrcscParser {
 
   private static final String TAG = "OrcscParser";
+  @Nullable
   public static ArrayList<Boat> getBoats(String res) {
     try {
       OrcscFile f = OrcscDeserializer.deserialize(res);
@@ -37,6 +40,7 @@ class OrcscParser {
     return ret;
   }
 
+  @Contract("null -> null")
   private static Boat convertToBoat(FleetRow r) {
     if (r==null)
       return null;

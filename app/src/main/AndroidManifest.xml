@@ -9,7 +9,7 @@
     android:roundIcon="@mipmap/ic_launcher_round"
     android:supportsRtl="true"
     android:theme="@style/AppTheme">
-    <activity android:name=".MainActivity">
+    <activity android:name=".activities.MainActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
 
@@ -18,12 +18,14 @@
     </activity>
     <activity
       android:label="@string/title_activity_race_input"
-      android:name=".RaceInputActivity"
-      android:parentActivityName=".MainActivity"
+      android:name=".activities.RaceInputActivity"
+      android:parentActivityName=".activities.MainActivity"
       android:theme="@style/AppTheme.NoActionBar">
       <meta-data
         android:name="android.support.PARENT_ACTIVITY"
-        android:value="in.avimarine.racecommittee.MainActivity"/>
+        android:value="in.avimarine.racecommittee.activities.MainActivity"/>
+    </activity>
+    <activity android:name=".activities.RaceSelectActivity">
     </activity>
   </application>
 

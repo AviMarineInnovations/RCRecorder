@@ -1,4 +1,4 @@
-package in.avimarine.racecommittee;
+package in.avimarine.racecommittee.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,16 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import in.avimarine.orccertificatesimporter.ORCCertObj;
-import in.avimarine.orccertificatesimporter.ORCCertsImporter;
-import in.avimarine.racecommittee.objects.Boat;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import org.jetbrains.annotations.NotNull;
+import in.avimarine.racecommittee.R;
 
 /**
  * This file is part of an Avi Marine Innovations project: RaceCommittee first created by aayaffe on
@@ -29,18 +20,8 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main1);
-
+    setContentView(R.layout.activity_main);
     openOrcscFile();
-
-//    ORCCertsImporter.getCertsByCountry("ISR",ret -> {
-//      ArrayList<Boat> boats = convertToBoatList(ret);
-//      Bundle b = new Bundle();
-//      b.putParcelableArrayList("BOATLIST",boats);
-//      Intent i = new Intent(this,RaceInputActivity.class);
-//      i.putExtras(b);
-//      startActivity(i);
-//    });
   }
 
   private void openOrcscFile() {
@@ -64,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public void onActivityResult(int requestCode, int resultCode,
       Intent resultData) {
-
+    Log.d(TAG, "In on ActivityResult");
     // The ACTION_OPEN_DOCUMENT intent was sent with the request code
     // READ_REQUEST_CODE. If the request code seen here doesn't match, it's the
     // response to some other intent, and the code below shouldn't run at all.
@@ -78,57 +59,22 @@ public class MainActivity extends AppCompatActivity {
       if (resultData != null) {
         uri = resultData.getData();
         Log.i(TAG, "Uri: " + uri.toString());
-        try {
-          String res = readTextFromUri(uri);
-          parseAndStartActivity(res);
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
+          parseAndStartActivity(uri);
+
       }
     }
   }
 
-  private void parseAndStartActivity(String res) {
-    ArrayList<Boat> boats = OrcscParser.getBoats(res);
+  private void parseAndStartActivity(Uri uri) {
+    Log.d(TAG, "Opening activity");
     Bundle b = new Bundle();
-    b.putParcelableArrayList("BOATLIST", boats);
-    Intent i = new Intent(this, RaceInputActivity.class);
+    b.putString("URI", uri.toString());
+    Intent i = new Intent(this, RaceSelectActivity.class);
     i.putExtras(b);
     startActivity(i);
   }
 
-  private String readTextFromUri(Uri uri) throws IOException {
-    InputStream inputStream = getContentResolver().openInputStream(uri);
-    BufferedReader reader = new BufferedReader(new InputStreamReader(
-        inputStream));
-    StringBuilder stringBuilder = new StringBuilder();
-    String line;
-    while ((line = reader.readLine()) != null) {
-      stringBuilder.append(line);
-    }
-    inputStream.close();
-//      parcelFileDescriptor.close();
-    return stringBuilder.toString();
-  }
 
 
-  @NotNull
-  private ArrayList<Boat> convertToBoatList(List<ORCCertObj> l) {
-    ArrayList<Boat> ret = new ArrayList<>();
-    if (l == null) {
-      return ret;
-    }
-    int c = 1;
-    for (ORCCertObj o : l) {
-      Boat b = new Boat();
-      b.setBowNo(c++);
-      b.setLOA(o.getLOA());
-      b.setRefNo(o.getRefNo());
-      b.setSailNo(o.getSailNo());
-      b.setYachtsClass(o.getYachtsClass());
-      b.setYachtsName(o.getYachtsName());
-      ret.add(b);
-    }
-    return ret;
-  }
+
 }

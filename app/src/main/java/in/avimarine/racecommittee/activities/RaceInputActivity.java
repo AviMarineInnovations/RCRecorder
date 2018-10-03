@@ -1,4 +1,4 @@
-package in.avimarine.racecommittee;
+package in.avimarine.racecommittee.activities;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -21,8 +21,8 @@ import android.widget.RadioGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TableRow.LayoutParams;
-import in.avimarine.orccertificatesimporter.ORCCertObj;
-import in.avimarine.orccertificatesimporter.ORCCertsImporter;
+import in.avimarine.racecommittee.IdType;
+import in.avimarine.racecommittee.R;
 import in.avimarine.racecommittee.objects.Boat;
 import java.util.ArrayList;
 import java.util.Collections;

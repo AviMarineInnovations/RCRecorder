@@ -23,6 +23,7 @@ import android.widget.TableRow;
 import android.widget.TableRow.LayoutParams;
 import in.avimarine.racecommittee.IdType;
 import in.avimarine.racecommittee.R;
+import in.avimarine.racecommittee.fragments.LargeFleetRaceInputFragment;
 import in.avimarine.racecommittee.objects.Boat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -289,7 +290,7 @@ public class RaceInputActivity extends AppCompatActivity {
     public Fragment getItem(int position) {
       // getItem is called to instantiate the fragment for the given page.
       // Return a RaceInputFragment (defined as a static inner class below).
-      return RaceInputFragment.newInstance(position + 1);
+      return LargeFleetRaceInputFragment.newInstance(position + 1);
     }
 
     @Override

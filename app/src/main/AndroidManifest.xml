@@ -27,6 +27,10 @@
     </activity>
     <activity android:name=".activities.RaceSelectActivity">
     </activity>
+    <activity android:name=".activities.RaceInput2Activity">
+    </activity>
+    <activity android:name=".activities.LargeFleetRaceInputActivity">
+    </activity>
   </application>
 
 </manifest>

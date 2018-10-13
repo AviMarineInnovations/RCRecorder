@@ -140,7 +140,6 @@ public class RaceInputFragment extends TabFragement {
     else
       Log.d(TAG, "Got null sortby type");
     adapter.notifyDataSetChanged();
-//    gridView.setAdapter(adapter);
     gv.setOnItemClickListener((parent, view, position, id) -> {
       final Boat boat = (Boat) parent.getItemAtPosition(position);
       btnOnClick(tab, boat);

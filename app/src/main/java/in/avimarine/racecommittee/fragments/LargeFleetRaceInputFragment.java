@@ -1,8 +1,6 @@
 package in.avimarine.racecommittee.fragments;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.arch.persistence.room.Room;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -19,7 +17,6 @@ import in.avimarine.racecommittee.dao.BoatViewModel;
 import in.avimarine.racecommittee.listadapters.CountryGridAdapter;
 import in.avimarine.racecommittee.listadapters.NumbersGridAdapter;
 import in.avimarine.racecommittee.R;
-import in.avimarine.racecommittee.dao.BoatRoomDatabase;
 import in.avimarine.racecommittee.objects.Action;
 import in.avimarine.racecommittee.objects.Boat;
 import in.avimarine.racecommittee.objects.Country;
@@ -40,23 +37,13 @@ public class LargeFleetRaceInputFragment extends TabFragement{
   private static final String ARG_SECTION_NUMBER = "section_number";
   private BoatViewModel mBoatViewModel;
 
-//  BoatRoomDatabase db;
-
-
   @Nullable
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       Bundle savedInstanceState) {
     super.onCreateView(inflater, container, savedInstanceState);
     View ret = inflater.inflate(R.layout.fragment_large_fleet_race_input, container, false);
-    mBoatViewModel = ViewModelProviders.of(this).get(BoatViewModel.class);
-    mBoatViewModel.getAllBoats().observe(this, new Observer<List<Boat>>() {
-      @Override
-      public void onChanged(@Nullable final List<Boat> boats) {
-        // Update the cached copy of the words in the adapter.
-        list = boats;
-      }
-    });
+
 
     return ret;
   }
@@ -66,9 +53,6 @@ public class LargeFleetRaceInputFragment extends TabFragement{
     Bundle args = new Bundle();
     args.putInt(ARG_SECTION_NUMBER, sectionNumber);
     fragment.setArguments(args);
-//    db = Room.databaseBuilder(getActivity().getApplicationContext(),
-//        BoatRoomDatabase.class, "boat_database").build();
-//    list = boats;
     return fragment;
   }
   @Override
@@ -79,22 +63,24 @@ public class LargeFleetRaceInputFragment extends TabFragement{
     sectionNumber = getArguments().getInt(ARG_SECTION_NUMBER);
     sailNoTv = v.findViewById(R.id.sail_no_tv);
     countryCodeTv = v.findViewById(R.id.country_code_tv);
-//    Bundle b = getActivity().getIntent().getExtras();
-//    if (b != null) {
-//      list = b.getParcelableArrayList("BOATLIST");
-//    }
     countryList = getCountries(list);
     CountryGridAdapter adapter = new CountryGridAdapter(getActivity(), countryList.toArray(new Country[0]), sectionNumber,IdType.SAIL_NO);
     gridView.setAdapter(adapter);
 
     gridView.setOnItemClickListener((parent, view, position, id) -> {
       final Country c = (Country) parent.getItemAtPosition(position);
-      btnOnClick(sectionNumber, c,v.findViewById(R.id.country_code_tv));
+      countryBtnOnClick(sectionNumber, c,v.findViewById(R.id.country_code_tv));
       RelativeLayout rl = view.findViewById(R.id.gridItem);
     });
     setNumberPadLayout(v.findViewById(R.id.numbers_grid),sailNoTv);
     Button setBtn = v.findViewById(R.id.set_btn);
     setBtn.setOnClickListener(setBtnClick());
+    mBoatViewModel = ViewModelProviders.of(this).get(BoatViewModel.class);
+    mBoatViewModel.getAllBoats().observe(this, boats -> {
+      adapter.setCountries(getCountries(boats));
+      list = boats;
+      adapter.notifyDataSetChanged();
+    });
   }
 
   private OnClickListener setBtnClick() {
@@ -102,12 +88,31 @@ public class LargeFleetRaceInputFragment extends TabFragement{
         String sailNo = selectedCountry+selectedSailNo;
         Boat b = getBoat(list, sailNo);
         if (b!=null) {
-          b.setFinish(new Date());
+          btnOnClick(sectionNumber,b);
+//          b.setFinish(new Date());
           clearTvs();
           return;
         }
       Toast.makeText(getActivity(),"Could not find boat",Toast.LENGTH_SHORT).show();
     };
+  }
+
+  private void btnOnClick(int tab, Boat o) {
+    mBoatViewModel.delete(o);
+    if (tab == 1) {
+      if (o.getCheckIn() == null) {
+        o.setCheckIn(new Date());
+      }
+    } else if (tab == 2) {
+      if (o.getOCS() == null) {
+        o.setOCS(new Date());
+      }
+    } else {
+      if (o.getFinish() == null) {
+        o.setFinish(new Date());
+      }
+    }
+    mBoatViewModel.insert(o);
   }
 
   private void clearTvs() {
@@ -147,7 +152,7 @@ public class LargeFleetRaceInputFragment extends TabFragement{
   private String getCountryCode(String sailNo) {
     return sailNo.substring(0,3);
   }
-  private void btnOnClick(int tab, Country c, TextView tv) {
+  private void countryBtnOnClick(int tab, Country c, TextView tv) {
     String countryCode = c.code;
     selectedCountry = countryCode;
     tv.setText(countryCode + '-');

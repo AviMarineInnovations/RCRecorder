@@ -2,6 +2,9 @@ package in.avimarine.racecommittee.listadapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,9 @@ import android.widget.TextView;
 import in.avimarine.racecommittee.IdType;
 import in.avimarine.racecommittee.R;
 import in.avimarine.racecommittee.objects.Boat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -19,32 +25,60 @@ import java.util.List;
  */
 public class BoatGridAdapter extends ArrayAdapter<Boat> {
 
+  private static final String TAG = "BoatGridAdapter";
+
   private final Context context;
   private Boat[] values;
   private final int tab;
-  private final IdType idType;
+  private IdType idType;
+  private IdType sortBy;
 
   public BoatGridAdapter(Context context, int i, IdType it) {
     super(context, -1);
     this.context = context;
     this.tab = i;
     this.idType = it;
+    this.sortBy = it;
   }
 
   @Override
-  public View getView(int position, View convertView, ViewGroup parent) {
+  public int getCount() {
+    if (values != null) {
+      return values.length;
+    }
+    return 0;
+  }
+
+  @Nullable
+  @Override
+  public Boat getItem(int position) {
+    if (values == null || position > values.length) {
+      Log.e(TAG, "Error getting item in position");
+      return null;
+    }
+    return values[position];
+  }
+
+  @NonNull
+  @Override
+  public View getView(int position, View convertView, @NonNull ViewGroup parent) {
     LayoutInflater inflater = (LayoutInflater) context
         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    View rowView = inflater.inflate(R.layout.grid_item, parent, false);
+    View rowView;
+    if (convertView == null) {
+      rowView = inflater.inflate(R.layout.grid_item, parent, false);
+    } else {
+      rowView = convertView;
+    }
     Boat o = values[position];
     RelativeLayout rl = rowView.findViewById(R.id.gridItem);
     TextView firstLine = rowView.findViewById(R.id.firstLine);
-    switch(idType){
+    switch (idType) {
       case BOAT_NAME:
         firstLine.setText(values[position].getYachtsName());
         break;
       case BOW_NO:
-        firstLine.setText(values[position].getBowNo());
+        firstLine.setText(values[position].getBowNo() + "");
         break;
       case SAIL_NO:
         firstLine.setText(values[position].getSailNo());
@@ -74,6 +108,36 @@ public class BoatGridAdapter extends ArrayAdapter<Boat> {
 
   public void setBoats(List<Boat> boats) {
     values = boats.toArray(new Boat[boats.size()]);
+  }
+
+  public IdType getIdType() {
+    return idType;
+  }
+
+  public void setIdType(IdType idType) {
+    this.idType = idType;
+    this.notifyDataSetChanged();
+  }
+
+  public void setSortBy(IdType sortBy) {
+    this.sortBy = sortBy;
+    ArrayList<Boat> l = new ArrayList<>(Arrays.asList(values));
+    switch (sortBy) {
+      case SAIL_NO:
+        Collections.sort(l,
+            (obj1, obj2) -> obj1.getSailNo().compareToIgnoreCase(obj2.getSailNo()));
+        break;
+      case BOW_NO:
+        Collections.sort(l, (boat, t1) -> boat.getBowNo() - t1.getBowNo());
+        break;
+      default:
+        Collections.sort(l,
+            (obj1, obj2) -> obj1.getYachtsName().compareToIgnoreCase(obj2.getYachtsName()));
+        break;
+    }
+    setBoats(l);
+
+    this.notifyDataSetChanged();
   }
 }
 

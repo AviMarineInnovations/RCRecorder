@@ -4,16 +4,15 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  tools:context="in.avimarine.racecommittee.activities.RaceInput2Activity">
+  android:layout_height="match_parent">
 
 
   <GridView
     android:id="@+id/grid"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:maxHeight="480dp"
-    android:columnWidth="90dp"
+    android:maxHeight="300dp"
+    android:columnWidth="60dp"
     android:horizontalSpacing="5dp"
     android:numColumns="auto_fit"
     android:verticalSpacing="5dp"/>

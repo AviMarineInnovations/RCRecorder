@@ -48,9 +48,10 @@ public class RaceSelectActivity extends AppCompatActivity {
         BoatRoomDatabase.class, "boat_database").build();
     ArrayList<Race> list = OrcscParser.getRaces(orcscString);
     ArrayList<Boat> boats = OrcscParser.getBoats(orcscString);
-    PopulateDbAsync pda = new PopulateDbAsync(db);
-    pda.execute(boats.toArray(new Boat[0]));
-//    db.boatDao().insertAll(boats.toArray(new Boat[0]));
+    if (boats!=null&&boats.size()>0) {
+      PopulateDbAsync pda = new PopulateDbAsync(db);
+      pda.execute(boats.toArray(new Boat[0]));
+    }
     final ListView listview = findViewById(R.id.listview);
 
     RaceListAdapter adapter = new RaceListAdapter(this, list.toArray(new Race[list.size()]));

@@ -2,6 +2,9 @@ package in.avimarine.racecommittee.listadapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +22,12 @@ import java.util.List;
  */
 public class BoatGridAdapter extends ArrayAdapter<Boat> {
 
+  private static final String TAG = "BoatGridAdapter";
+
   private final Context context;
   private Boat[] values;
   private final int tab;
-  private final IdType idType;
+  private IdType idType;
 
   public BoatGridAdapter(Context context, int i, IdType it) {
     super(context, -1);
@@ -32,10 +37,33 @@ public class BoatGridAdapter extends ArrayAdapter<Boat> {
   }
 
   @Override
-  public View getView(int position, View convertView, ViewGroup parent) {
+  public int getCount() {
+    if (values!=null) {
+      return values.length;
+    }
+    return 0;
+  }
+
+  @Nullable
+  @Override
+  public Boat getItem(int position) {
+    if (values==null || position>values.length){
+      Log.e(TAG,"Error getting item in position");
+      return null;
+    }
+    return values[position];
+  }
+
+  @NonNull
+  @Override
+  public View getView(int position, View convertView, @NonNull ViewGroup parent) {
     LayoutInflater inflater = (LayoutInflater) context
         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    View rowView = inflater.inflate(R.layout.grid_item, parent, false);
+    View rowView;
+    if (convertView==null)
+      rowView = inflater.inflate(R.layout.grid_item, parent, false);
+    else
+      rowView=convertView;
     Boat o = values[position];
     RelativeLayout rl = rowView.findViewById(R.id.gridItem);
     TextView firstLine = rowView.findViewById(R.id.firstLine);
@@ -44,7 +72,7 @@ public class BoatGridAdapter extends ArrayAdapter<Boat> {
         firstLine.setText(values[position].getYachtsName());
         break;
       case BOW_NO:
-        firstLine.setText(values[position].getBowNo());
+        firstLine.setText(values[position].getBowNo()+"");
         break;
       case SAIL_NO:
         firstLine.setText(values[position].getSailNo());
@@ -74,6 +102,14 @@ public class BoatGridAdapter extends ArrayAdapter<Boat> {
 
   public void setBoats(List<Boat> boats) {
     values = boats.toArray(new Boat[boats.size()]);
+  }
+
+  public IdType getIdType() {
+    return idType;
+  }
+
+  public void setIdType(IdType idType) {
+    this.idType = idType;
   }
 }
 

@@ -1,17 +1,19 @@
 package in.avimarine.racecommittee.activities;
 
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import in.avimarine.racecommittee.ListAdapters.RaceListAdapter;
+import in.avimarine.racecommittee.dao.PopulateDbAsync;
+import in.avimarine.racecommittee.listadapters.RaceListAdapter;
 import in.avimarine.racecommittee.OrcscParser;
 import in.avimarine.racecommittee.R;
+import in.avimarine.racecommittee.dao.BoatRoomDatabase;
 import in.avimarine.racecommittee.objects.Boat;
 import in.avimarine.racecommittee.objects.Race;
 import java.io.BufferedReader;
@@ -24,7 +26,10 @@ import java.util.List;
 
 public class RaceSelectActivity extends AppCompatActivity {
 
-  ArrayList<Boat> boats;
+//  ArrayList<Boat> boats;
+  BoatRoomDatabase db;
+
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +37,6 @@ public class RaceSelectActivity extends AppCompatActivity {
     setContentView(R.layout.activity_race_select);
     Bundle b = this.getIntent().getExtras();
     String uriString = b.getString("URI");
-
     Uri uri = Uri.parse(uriString);
     String orcscString = null;
     try {
@@ -40,8 +44,13 @@ public class RaceSelectActivity extends AppCompatActivity {
     } catch (IOException e) {
       e.printStackTrace();
     }
+    db = Room.databaseBuilder(getApplicationContext(),
+        BoatRoomDatabase.class, "boat_database").build();
     ArrayList<Race> list = OrcscParser.getRaces(orcscString);
-    boats = OrcscParser.getBoats(orcscString);
+    ArrayList<Boat> boats = OrcscParser.getBoats(orcscString);
+    PopulateDbAsync pda = new PopulateDbAsync(db);
+    pda.execute(boats.toArray(new Boat[0]));
+//    db.boatDao().insertAll(boats.toArray(new Boat[0]));
     final ListView listview = findViewById(R.id.listview);
 
     RaceListAdapter adapter = new RaceListAdapter(this, list.toArray(new Race[list.size()]));
@@ -49,10 +58,10 @@ public class RaceSelectActivity extends AppCompatActivity {
 
     listview.setOnItemClickListener((parent, view, position, id) -> {
       final Race item = (Race) parent.getItemAtPosition(position);
-      Bundle newB = new Bundle();
-      newB.putParcelableArrayList("BOATLIST", boats);
+//      Bundle newB = new Bundle();
+//      newB.putParcelableArrayList("BOATLIST", boats);
       Intent i = new Intent(this, RaceInputActivity.class);
-      i.putExtras(newB);
+//      i.putExtras(newB);
       startActivity(i);
 
 //      view.animate().setDuration(2000).alpha(0)

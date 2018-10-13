@@ -1,4 +1,4 @@
-package in.avimarine.racecommittee.ListAdapters;
+package in.avimarine.racecommittee.listadapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;

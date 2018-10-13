@@ -1,4 +1,4 @@
-package in.avimarine.racecommittee.ListAdapters;
+package in.avimarine.racecommittee.listadapters;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -6,13 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import in.avimarine.racecommittee.IdType;
 import in.avimarine.racecommittee.R;
 import in.avimarine.racecommittee.objects.Boat;
-import in.avimarine.racecommittee.objects.Race;
+import java.util.List;
 
 /**
  * This file is part of an Avi Marine Innovations project: RaceCommittee first created by aayaffe on
@@ -21,14 +20,13 @@ import in.avimarine.racecommittee.objects.Race;
 public class BoatGridAdapter extends ArrayAdapter<Boat> {
 
   private final Context context;
-  private final Boat[] values;
+  private Boat[] values;
   private final int tab;
   private final IdType idType;
 
-  public BoatGridAdapter(Context context, Boat[] values, int i, IdType it) {
-    super(context, -1, values);
+  public BoatGridAdapter(Context context, int i, IdType it) {
+    super(context, -1);
     this.context = context;
-    this.values = values;
     this.tab = i;
     this.idType = it;
   }
@@ -72,6 +70,10 @@ public class BoatGridAdapter extends ArrayAdapter<Boat> {
       }
     }
     return rowView;
+  }
+
+  public void setBoats(List<Boat> boats) {
+    values = boats.toArray(new Boat[boats.size()]);
   }
 }
 

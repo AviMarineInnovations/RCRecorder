@@ -1,6 +1,8 @@
 package in.avimarine.racecommittee.fragments;
 
-import android.support.v4.app.Fragment;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
+import android.arch.persistence.room.Room;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -13,19 +15,22 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import in.avimarine.racecommittee.IdType;
-import in.avimarine.racecommittee.ListAdapters.CountryGridAdapter;
-import in.avimarine.racecommittee.ListAdapters.NumbersGridAdapter;
+import in.avimarine.racecommittee.dao.BoatViewModel;
+import in.avimarine.racecommittee.listadapters.CountryGridAdapter;
+import in.avimarine.racecommittee.listadapters.NumbersGridAdapter;
 import in.avimarine.racecommittee.R;
+import in.avimarine.racecommittee.dao.BoatRoomDatabase;
 import in.avimarine.racecommittee.objects.Action;
 import in.avimarine.racecommittee.objects.Boat;
 import in.avimarine.racecommittee.objects.Country;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 
-public class LargeFleetRaceInputFragment extends Fragment {
+public class LargeFleetRaceInputFragment extends TabFragement{
 
-  private ArrayList<Boat> list;
+  private List<Boat> list;
   private HashSet<Country> countryList;
   private String selectedCountry = "";
   private String selectedSailNo = "";
@@ -33,6 +38,9 @@ public class LargeFleetRaceInputFragment extends Fragment {
   private TextView countryCodeTv;
   private int sectionNumber;
   private static final String ARG_SECTION_NUMBER = "section_number";
+  private BoatViewModel mBoatViewModel;
+
+//  BoatRoomDatabase db;
 
 
   @Nullable
@@ -41,15 +49,26 @@ public class LargeFleetRaceInputFragment extends Fragment {
       Bundle savedInstanceState) {
     super.onCreateView(inflater, container, savedInstanceState);
     View ret = inflater.inflate(R.layout.fragment_large_fleet_race_input, container, false);
-
+    mBoatViewModel = ViewModelProviders.of(this).get(BoatViewModel.class);
+    mBoatViewModel.getAllBoats().observe(this, new Observer<List<Boat>>() {
+      @Override
+      public void onChanged(@Nullable final List<Boat> boats) {
+        // Update the cached copy of the words in the adapter.
+        list = boats;
+      }
+    });
 
     return ret;
   }
-  public static LargeFleetRaceInputFragment newInstance(int sectionNumber) {
+  @Override
+  public LargeFleetRaceInputFragment newInstance(int sectionNumber, ArrayList<Boat> boats) {
     LargeFleetRaceInputFragment fragment = new LargeFleetRaceInputFragment();
     Bundle args = new Bundle();
     args.putInt(ARG_SECTION_NUMBER, sectionNumber);
     fragment.setArguments(args);
+//    db = Room.databaseBuilder(getActivity().getApplicationContext(),
+//        BoatRoomDatabase.class, "boat_database").build();
+//    list = boats;
     return fragment;
   }
   @Override
@@ -60,10 +79,10 @@ public class LargeFleetRaceInputFragment extends Fragment {
     sectionNumber = getArguments().getInt(ARG_SECTION_NUMBER);
     sailNoTv = v.findViewById(R.id.sail_no_tv);
     countryCodeTv = v.findViewById(R.id.country_code_tv);
-    Bundle b = getActivity().getIntent().getExtras();
-    if (b != null) {
-      list = b.getParcelableArrayList("BOATLIST");
-    }
+//    Bundle b = getActivity().getIntent().getExtras();
+//    if (b != null) {
+//      list = b.getParcelableArrayList("BOATLIST");
+//    }
     countryList = getCountries(list);
     CountryGridAdapter adapter = new CountryGridAdapter(getActivity(), countryList.toArray(new Country[0]), sectionNumber,IdType.SAIL_NO);
     gridView.setAdapter(adapter);
@@ -98,7 +117,7 @@ public class LargeFleetRaceInputFragment extends Fragment {
     sailNoTv.setText(selectedSailNo);
   }
 
-  private Boat getBoat(ArrayList<Boat> list, String sailNo) {
+  private Boat getBoat(List<Boat> list, String sailNo) {
     String clearSailNo = sailNo.replace("-", "").replace(" ","");
     for (Boat b: list){
       String checkedSailNo = b.getSailNo().replace("-", "").replace(" ","");
@@ -109,7 +128,7 @@ public class LargeFleetRaceInputFragment extends Fragment {
     return null;
   }
 
-  private HashSet<Country> getCountries(ArrayList<Boat> list) {
+  private HashSet<Country> getCountries(List<Boat> list) {
     HashSet<Country> ret = new HashSet<>();
     if (list == null)
       return ret;

@@ -1,5 +1,5 @@
 <resources>
-  <string name="app_name">AVI Race Committee</string>
+  <string name="app_name">AVI RC Recorder</string>
   <string name="title_activity_race_input">RaceInputActivity</string>
   <string name="tab_text_1">Check-in</string>
   <string name="tab_text_2">OCS</string>
@@ -13,4 +13,5 @@
   <string name="action_sortby_sail">Sortby Sail No</string>
   <string name="action_sortby_bow">Sortby Bow No</string>
   <string name="action_sortby_name">Sortby Boat Name</string>
+  <string name="action_fleet_size">Change Input Option</string>
 </resources>

@@ -1,7 +1,11 @@
 package in.avimarine.racecommittee.activities;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,6 +13,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -23,7 +28,9 @@ import android.widget.TableRow;
 import android.widget.TableRow.LayoutParams;
 import in.avimarine.racecommittee.IdType;
 import in.avimarine.racecommittee.R;
+import in.avimarine.racecommittee.dao.BoatViewModel;
 import in.avimarine.racecommittee.fragments.LargeFleetRaceInputFragment;
+import in.avimarine.racecommittee.fragments.TabFragement;
 import in.avimarine.racecommittee.objects.Boat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,12 +46,12 @@ public class RaceInputActivity extends AppCompatActivity {
    * android.support.v4.app.FragmentStatePagerAdapter}.
    */
   private SectionsPagerAdapter mSectionsPagerAdapter;
-
+  private static final String TAG = "RaceInputActivity";
   /**
    * The {@link ViewPager} that will host the section contents.
    */
   private ViewPager mViewPager;
-  protected static List<Boat> boats;
+  protected static ArrayList<Boat> boats;
   protected static int radioId = R.id.identification_radio_sailno;
   protected static IdType sortBy = IdType.SAIL_NO;
   protected static UpdateInitiator ui;
@@ -56,14 +63,30 @@ public class RaceInputActivity extends AppCompatActivity {
     setContentView(R.layout.activity_race_input);
     ui = new UpdateInitiator();
     Bundle b = this.getIntent().getExtras();
-    boats = b.getParcelableArrayList("BOATLIST");
+//    boats = b.getParcelableArrayList("BOATLIST");
+    int fragement = 0;
+    try {
+      fragement = b.getInt("FRAGMENT_CLASS");
+    }catch (Exception e) {
+
+    }
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     getSupportActionBar().setTitle("Winter 18 Race1");
     // Create the adapter that will return a fragment for each of the three
     // primary sections of the activity.
-    mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+    if (fragement==0) {
+      mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(),
+          LargeFleetRaceInputFragment.class);
+      Log.d(TAG,"The fragment class is LargeFleetRaceInputFragment");
+
+    }
+    else {
+      mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(),
+          RaceInputFragment.class);
+      Log.d(TAG,"The fragment class is RaceInputFragment");
+    }
 
     // Set up the ViewPager with the sections adapter.
     mViewPager = findViewById(R.id.container);
@@ -103,6 +126,23 @@ public class RaceInputActivity extends AppCompatActivity {
       sortBy = IdType.BOAT_NAME;
       ui.declareUpdate();
       return true;
+    } else if (id == R.id.action_fleet_size) {
+      Intent mIntent = getIntent();
+      Bundle b = mIntent.getExtras();
+      if (b==null)
+        b=new Bundle();
+//      b.putParcelableArrayList("BOATLIST",boats);
+      if (mSectionsPagerAdapter.fragementClass == LargeFleetRaceInputFragment.class) {
+        b.putInt("FRAGMENT_CLASS", 1);
+      }
+      else {
+        b.putInt("FRAGMENT_CLASS", 0);
+      }
+      mIntent.putExtras(b);
+      finish();
+      startActivity(mIntent);
+      this.recreate();
+      return true;
     }
 
     return super.onOptionsItemSelected(item);
@@ -111,7 +151,7 @@ public class RaceInputActivity extends AppCompatActivity {
   /**
    * A placeholder fragment containing a simple view.
    */
-  public static class RaceInputFragment extends Fragment {
+  public static class RaceInputFragment extends TabFragement {
 
     private static final String TAG = "RaceInputFragment";
     /**
@@ -120,6 +160,10 @@ public class RaceInputActivity extends AppCompatActivity {
     private static final String ARG_SECTION_NUMBER = "section_number";
     private TableLayout tableLayout;
     private int sectionNumber;
+    private List<Boat> list;
+    private BoatViewModel mBoatViewModel;
+
+
 
     public RaceInputFragment() {
     }
@@ -127,11 +171,13 @@ public class RaceInputActivity extends AppCompatActivity {
     /**
      * Returns a new instance of this fragment for the given section number.
      */
-    public static RaceInputFragment newInstance(int sectionNumber) {
+    @Override
+    public RaceInputFragment newInstance(int sectionNumber, ArrayList<Boat> list) {
       RaceInputFragment fragment = new RaceInputFragment();
       Bundle args = new Bundle();
       args.putInt(ARG_SECTION_NUMBER, sectionNumber);
       fragment.setArguments(args);
+      this.list = list;
       return fragment;
     }
 
@@ -141,11 +187,19 @@ public class RaceInputActivity extends AppCompatActivity {
       View rootView = inflater.inflate(R.layout.fragment_race_input, container, false);
       tableLayout = rootView.findViewById(R.id.boatsButtonTable);
       sectionNumber = getArguments().getInt(ARG_SECTION_NUMBER);
-      generateButtonTable(tableLayout, boats,
-          radioId, sectionNumber, sortBy);
       addRadioButtonClickListeneres(rootView);
       ui.addListener(() -> generateButtonTable(tableLayout, boats,
           radioId, sectionNumber, sortBy));
+      mBoatViewModel = ViewModelProviders.of(this).get(BoatViewModel.class);
+      mBoatViewModel.getAllBoats().observe(this, new Observer<List<Boat>>() {
+        @Override
+        public void onChanged(@Nullable final List<Boat> boats) {
+          // Update the cached copy of the words in the adapter.
+          list = boats;
+          generateButtonTable(tableLayout, boats,
+              radioId, sectionNumber, sortBy);
+        }
+      });
       return rootView;
     }
 
@@ -176,8 +230,7 @@ public class RaceInputActivity extends AppCompatActivity {
           break;
         case SAIL_NO:
         default:
-          Collections
-              .sort(l, (obj1, obj2) -> obj1.getSailNo().compareToIgnoreCase(obj2.getSailNo()));
+          Collections.sort(l, (obj1, obj2) -> obj1.getSailNo().compareToIgnoreCase(obj2.getSailNo()));
           break;
       }
 
@@ -246,7 +299,8 @@ public class RaceInputActivity extends AppCompatActivity {
     }
 
     private void btnOnLongClick(int tab, Boat o) {
-      boats.remove(o);
+      mBoatViewModel.delete(o);
+//      boats.remove(o);
       if (tab == 1) {
         o.setCheckIn(null);
       } else if (tab == 2) {
@@ -254,11 +308,13 @@ public class RaceInputActivity extends AppCompatActivity {
       } else {
         o.setFinish(null);
       }
-      boats.add(o);
+      mBoatViewModel.insert(o);
+//      boats.add(o);
     }
 
     private void btnOnClick(int tab, Boat o) {
-      boats.remove(o);
+      mBoatViewModel.delete(o);
+//      boats.remove(o);
       if (tab == 1) {
         if (o.getCheckIn() == null) {
           o.setCheckIn(new Date());
@@ -272,7 +328,8 @@ public class RaceInputActivity extends AppCompatActivity {
           o.setFinish(new Date());
         }
       }
-      boats.add(o);
+      mBoatViewModel.insert(o);
+//      boats.add(o);
     }
   }
 
@@ -280,17 +337,26 @@ public class RaceInputActivity extends AppCompatActivity {
    * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the
    * sections/tabs/pages.
    */
-  public class SectionsPagerAdapter extends FragmentPagerAdapter {
+  public class SectionsPagerAdapter<T extends TabFragement> extends FragmentPagerAdapter {
+    Class<T> fragementClass;
 
-    public SectionsPagerAdapter(FragmentManager fm) {
+    public SectionsPagerAdapter(FragmentManager fm, Class<T> fc) {
       super(fm);
+      fragementClass = fc;
     }
 
     @Override
     public Fragment getItem(int position) {
       // getItem is called to instantiate the fragment for the given page.
       // Return a RaceInputFragment (defined as a static inner class below).
-      return LargeFleetRaceInputFragment.newInstance(position + 1);
+      try {
+        return fragementClass.newInstance().newInstance(position + 1,boats);
+      } catch (InstantiationException e) {
+        e.printStackTrace();
+      } catch (IllegalAccessException e) {
+        e.printStackTrace();
+      }
+      return null;
     }
 
     @Override

@@ -1,20 +1,16 @@
 package in.avimarine.racecommittee.activities;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import in.avimarine.racecommittee.IdType;
-import in.avimarine.racecommittee.ListAdapters.BoatGridAdapter;
-import in.avimarine.racecommittee.ListAdapters.CountryGridAdapter;
-import in.avimarine.racecommittee.ListAdapters.NumbersGridAdapter;
+import in.avimarine.racecommittee.listadapters.CountryGridAdapter;
+import in.avimarine.racecommittee.listadapters.NumbersGridAdapter;
 import in.avimarine.racecommittee.R;
 import in.avimarine.racecommittee.objects.Action;
 import in.avimarine.racecommittee.objects.Boat;
@@ -22,7 +18,6 @@ import in.avimarine.racecommittee.objects.Country;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import org.w3c.dom.Text;
 
 public class LargeFleetRaceInputActivity extends AppCompatActivity {
 

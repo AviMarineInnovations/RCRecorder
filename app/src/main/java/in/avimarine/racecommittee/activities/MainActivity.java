@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import com.amitshekhar.DebugDB;
 import in.avimarine.racecommittee.R;
 
 /**
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     openOrcscFile();
+    DebugDB.getAddressLog();
   }
 
   private void openOrcscFile() {

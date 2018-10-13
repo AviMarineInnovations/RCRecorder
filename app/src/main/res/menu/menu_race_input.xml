@@ -18,6 +18,11 @@
     android:title="@string/action_sortby_name"
     app:showAsAction="never"/>
   <item
+    android:id="@+id/action_fleet_size"
+    android:orderInCategory="100"
+    android:title="@string/action_fleet_size"
+    app:showAsAction="never"/>
+  <item
     android:id="@+id/action_settings"
     android:orderInCategory="100"
     android:title="@string/action_settings"

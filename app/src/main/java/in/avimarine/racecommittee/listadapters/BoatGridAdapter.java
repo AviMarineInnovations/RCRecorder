@@ -28,7 +28,7 @@ public class BoatGridAdapter extends ArrayAdapter<Boat> {
   private static final String TAG = "BoatGridAdapter";
 
   private final Context context;
-  private Boat[] values;
+  private List<Boat> values;
   private final int tab;
   private IdType idType;
   private IdType sortBy;
@@ -42,9 +42,15 @@ public class BoatGridAdapter extends ArrayAdapter<Boat> {
   }
 
   @Override
+  public void notifyDataSetChanged() {
+    sort(sortBy);
+    super.notifyDataSetChanged();
+  }
+
+  @Override
   public int getCount() {
     if (values != null) {
-      return values.length;
+      return values.size();
     }
     return 0;
   }
@@ -52,11 +58,11 @@ public class BoatGridAdapter extends ArrayAdapter<Boat> {
   @Nullable
   @Override
   public Boat getItem(int position) {
-    if (values == null || position > values.length) {
+    if (values == null || position > values.size()) {
       Log.e(TAG, "Error getting item in position");
       return null;
     }
-    return values[position];
+    return values.get(position);
   }
 
   @NonNull
@@ -70,18 +76,18 @@ public class BoatGridAdapter extends ArrayAdapter<Boat> {
     } else {
       rowView = convertView;
     }
-    Boat o = values[position];
+    Boat o = values.get(position);
     RelativeLayout rl = rowView.findViewById(R.id.gridItem);
     TextView firstLine = rowView.findViewById(R.id.firstLine);
     switch (idType) {
       case BOAT_NAME:
-        firstLine.setText(values[position].getYachtsName());
+        firstLine.setText(values.get(position).getYachtsName());
         break;
       case BOW_NO:
-        firstLine.setText(values[position].getBowNo() + "");
+        firstLine.setText(values.get(position).getBowNo() + "");
         break;
       case SAIL_NO:
-        firstLine.setText(values[position].getSailNo());
+        firstLine.setText(values.get(position).getSailNo());
         break;
     }
     if (tab == 1) {
@@ -107,11 +113,7 @@ public class BoatGridAdapter extends ArrayAdapter<Boat> {
   }
 
   public void setBoats(List<Boat> boats) {
-    values = boats.toArray(new Boat[boats.size()]);
-  }
-
-  public IdType getIdType() {
-    return idType;
+    values = boats;
   }
 
   public void setIdType(IdType idType) {
@@ -121,23 +123,26 @@ public class BoatGridAdapter extends ArrayAdapter<Boat> {
 
   public void setSortBy(IdType sortBy) {
     this.sortBy = sortBy;
-    ArrayList<Boat> l = new ArrayList<>(Arrays.asList(values));
+    sort(sortBy);
+    this.notifyDataSetChanged();
+  }
+
+  private void sort(IdType sortBy){
+    if(values==null)
+      return;
     switch (sortBy) {
       case SAIL_NO:
-        Collections.sort(l,
+        Collections.sort(values,
             (obj1, obj2) -> obj1.getSailNo().compareToIgnoreCase(obj2.getSailNo()));
         break;
       case BOW_NO:
-        Collections.sort(l, (boat, t1) -> boat.getBowNo() - t1.getBowNo());
+        Collections.sort(values, (boat, t1) -> boat.getBowNo() - t1.getBowNo());
         break;
       default:
-        Collections.sort(l,
+        Collections.sort(values,
             (obj1, obj2) -> obj1.getYachtsName().compareToIgnoreCase(obj2.getYachtsName()));
         break;
     }
-    setBoats(l);
-
-    this.notifyDataSetChanged();
   }
 }
 

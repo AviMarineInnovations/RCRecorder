@@ -77,9 +77,7 @@ public class RaceInputFragment extends TabFragement {
           return;
         }
         String sortByString = b.getString("SORTBY");
-        String idTypeString = b.getString("IDTYPE");
         sortBy = IdType.valueOf(sortByString);
-        idType = IdType.valueOf(idTypeString);
         generateButtonTable(gridView, idType, sectionNumber, sortBy);
       }
     };
@@ -177,7 +175,6 @@ public class RaceInputFragment extends TabFragement {
   }
 
   private void btnOnLongClick(int tab, Boat o) {
-    mBoatViewModel.delete(o);
     if (tab == 1) {
       o.setCheckIn(null);
     } else if (tab == 2) {
@@ -185,11 +182,10 @@ public class RaceInputFragment extends TabFragement {
     } else {
       o.setFinish(null);
     }
-    mBoatViewModel.insert(o);
+    mBoatViewModel.updtae(o);
   }
 
   private void btnOnClick(int tab, Boat o) {
-    mBoatViewModel.delete(o);
     if (tab == 1) {
       if (o.getCheckIn() == null) {
         o.setCheckIn(new Date());
@@ -203,6 +199,6 @@ public class RaceInputFragment extends TabFragement {
         o.setFinish(new Date());
       }
     }
-    mBoatViewModel.insert(o);
+    mBoatViewModel.updtae(o);
   }
 }

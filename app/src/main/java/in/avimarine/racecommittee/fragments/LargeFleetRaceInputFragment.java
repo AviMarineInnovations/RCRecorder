@@ -24,11 +24,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.TreeSet;
 
 public class LargeFleetRaceInputFragment extends TabFragement{
 
   private List<Boat> list;
-  private HashSet<Country> countryList;
+  private TreeSet<Country> countryList;
   private String selectedCountry = "";
   private String selectedSailNo = "";
   private TextView sailNoTv;
@@ -89,7 +90,6 @@ public class LargeFleetRaceInputFragment extends TabFragement{
         Boat b = getBoat(list, sailNo);
         if (b!=null) {
           btnOnClick(sectionNumber,b);
-//          b.setFinish(new Date());
           clearTvs();
           return;
         }
@@ -98,7 +98,6 @@ public class LargeFleetRaceInputFragment extends TabFragement{
   }
 
   private void btnOnClick(int tab, Boat o) {
-    mBoatViewModel.delete(o);
     if (tab == 1) {
       if (o.getCheckIn() == null) {
         o.setCheckIn(new Date());
@@ -112,7 +111,7 @@ public class LargeFleetRaceInputFragment extends TabFragement{
         o.setFinish(new Date());
       }
     }
-    mBoatViewModel.insert(o);
+    mBoatViewModel.updtae(o);
   }
 
   private void clearTvs() {
@@ -133,8 +132,8 @@ public class LargeFleetRaceInputFragment extends TabFragement{
     return null;
   }
 
-  private HashSet<Country> getCountries(List<Boat> list) {
-    HashSet<Country> ret = new HashSet<>();
+  private TreeSet<Country> getCountries(List<Boat> list) {
+    TreeSet<Country> ret = new TreeSet<>();
     if (list == null)
       return ret;
     for (Boat b:list){

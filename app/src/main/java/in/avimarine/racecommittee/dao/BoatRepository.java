@@ -34,6 +34,10 @@ public class BoatRepository {
     new removeAsyncTask(mBoatDao).execute(boat);
   }
 
+  public void update(Boat boat) {
+    new updateAsyncTask(mBoatDao).execute(boat);
+  }
+
   private static class insertAsyncTask extends AsyncTask<Boat, Void, Void> {
 
     private BoatDao mAsyncTaskDao;
@@ -59,6 +63,20 @@ public class BoatRepository {
     @Override
     protected Void doInBackground(final Boat... params) {
       mAsyncTaskDao.delete(params[0]);
+      return null;
+    }
+  }
+
+  private class updateAsyncTask extends AsyncTask<Boat, Void, Void>{
+
+    private BoatDao mAsyncTaskDao;
+    public updateAsyncTask(BoatDao dao) {
+      mAsyncTaskDao = dao;
+    }
+
+    @Override
+    protected Void doInBackground(Boat... boats) {
+      mAsyncTaskDao.update(boats[0]);
       return null;
     }
   }

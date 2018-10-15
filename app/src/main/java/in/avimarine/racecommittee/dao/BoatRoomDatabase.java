@@ -11,7 +11,7 @@ import in.avimarine.racecommittee.objects.Boat;
  * This file is part of an Avi Marine Innovations project: RaceCommittee first created by aayaffe on
  * 06/10/2018.
  */
-@Database(entities = {Boat.class}, version = 1)
+@Database(entities = {Boat.class}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class BoatRoomDatabase extends RoomDatabase {
   public abstract BoatDao boatDao();

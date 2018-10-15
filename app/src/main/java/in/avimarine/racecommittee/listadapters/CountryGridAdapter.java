@@ -13,8 +13,10 @@ import in.avimarine.racecommittee.IdType;
 import in.avimarine.racecommittee.R;
 import in.avimarine.racecommittee.objects.Boat;
 import in.avimarine.racecommittee.objects.Country;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.TreeSet;
 
 /**
  * This file is part of an Avi Marine Innovations project: RaceCommittee first created by aayaffe on
@@ -71,7 +73,7 @@ public class CountryGridAdapter extends ArrayAdapter<Country> {
   public void setCountries(List<Country> countries) {
     values = countries.toArray(new Country[countries.size()]);
   }
-  public void setCountries(HashSet<Country> countries) {
+  public void setCountries(TreeSet<Country> countries) {
     values = countries.toArray(new Country[countries.size()]);
   }
 }

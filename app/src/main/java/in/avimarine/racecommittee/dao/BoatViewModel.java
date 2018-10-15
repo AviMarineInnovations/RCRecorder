@@ -26,6 +26,8 @@ import java.util.List;
 
     public void insert(Boat boat) { mRepository.insert(boat); }
 
+  public void updtae(Boat boat) { mRepository.update(boat); }
+
     public void delete(Boat boat) {mRepository.delete(boat);}
   }
 

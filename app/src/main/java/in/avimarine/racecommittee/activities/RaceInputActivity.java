@@ -93,17 +93,15 @@ public class RaceInputActivity extends AppCompatActivity {
       return true;
     } else if (id == R.id.action_sortby_sail) {
       sortBy = IdType.SAIL_NO;
-//      ui.declareUpdate();
-      sendTabAndSortBroadcast(sortBy, getIdType(radioId));
+      sendTabAndSortBroadcast(sortBy);
       return true;
     } else if (id == R.id.action_sortby_bow) {
       sortBy = IdType.BOW_NO;
-//      ui.declareUpdate();
+      sendTabAndSortBroadcast(sortBy);
       return true;
     } else if (id == R.id.action_sortby_name) {
       sortBy = IdType.BOAT_NAME;
-//      ui.declareUpdate();
-      sendTabAndSortBroadcast(sortBy, getIdType(radioId));
+      sendTabAndSortBroadcast(sortBy);
       return true;
     } else if (id == R.id.action_fleet_size) {
       Intent mIntent = getIntent();
@@ -136,10 +134,9 @@ public class RaceInputActivity extends AppCompatActivity {
     }
   }
 
-  private void sendTabAndSortBroadcast(IdType sortBy, IdType idType) {
+  private void sendTabAndSortBroadcast(IdType sortBy) {
     Intent intent = new Intent("TABANDSORT");
     intent.putExtra("SORTBY",sortBy.toString());
-    intent.putExtra("IDTYPE",idType.toString());
     sendBroadcast(intent);
   }
 

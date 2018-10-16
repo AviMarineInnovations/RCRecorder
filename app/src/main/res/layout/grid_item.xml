@@ -4,6 +4,7 @@
   android:layout_height="?android:attr/listPreferredItemHeight"
   android:padding="6dip"
   android:background="@color/number_pad_background">
+
   <TextView
     android:id="@+id/firstLine"
     android:layout_width="wrap_content"

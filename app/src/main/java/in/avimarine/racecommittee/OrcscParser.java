@@ -7,6 +7,7 @@ import in.avimarine.orcscorerxmlparser.Orcsc.OrcscFile;
 import in.avimarine.orcscorerxmlparser.Orcsc.RaceRow;
 import in.avimarine.orcscorerxmlparser.OrcscDeserializer;
 import in.avimarine.racecommittee.objects.Boat;
+import in.avimarine.racecommittee.objects.Event;
 import in.avimarine.racecommittee.objects.Race;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,19 +20,20 @@ import org.jetbrains.annotations.Contract;
 public class OrcscParser {
 
   private static final String TAG = "OrcscParser";
+
   @Nullable
-  public static ArrayList<Boat> getBoats(String res) {
+  public static List<Boat> getBoats(String res) {
     try {
       OrcscFile f = OrcscDeserializer.deserialize(res);
-
       return convertFleetToBoats(f);
     } catch (Exception e) {
       Log.e(TAG, "Error parsing orcsc file string.");
     }
-    return null;
+    return new ArrayList<>();
   }
+
   @Nullable
-  public static ArrayList<Race> getRaces(String res) {
+  public static List<Race> getRaces(String res) {
     try {
       OrcscFile f = OrcscDeserializer.deserialize(res);
 
@@ -39,13 +41,15 @@ public class OrcscParser {
     } catch (Exception e) {
       Log.e(TAG, "Error parsing orcsc file string.");
     }
-    return null;
+    return new ArrayList<>();
   }
 
   private static ArrayList<Race> convertRacesToRace(OrcscFile f) {
     ArrayList<Race> ret = new ArrayList<>();
-    if (f==null) return ret;
-    for (RaceRow r: f.race.list){
+    if (f == null) {
+      return ret;
+    }
+    for (RaceRow r : f.race.list) {
       Race b = convertToRace(r);
       ret.add(b);
     }
@@ -55,8 +59,9 @@ public class OrcscParser {
 
   @Contract("null -> null")
   private static Race convertToRace(RaceRow rr) {
-    if (rr==null)
+    if (rr == null) {
       return null;
+    }
     Race r = new Race();
     r.ClassId = rr.ClassId;
     r.Coeff = rr.Coeff;
@@ -73,8 +78,10 @@ public class OrcscParser {
 
   private static ArrayList<Boat> convertFleetToBoats(OrcscFile f) {
     ArrayList<Boat> ret = new ArrayList<>();
-    if (f==null) return ret;
-    for (FleetRow r: f.fleet.list){
+    if (f == null) {
+      return ret;
+    }
+    for (FleetRow r : f.fleet.list) {
       Boat b = convertToBoat(r);
       ret.add(b);
     }
@@ -84,8 +91,9 @@ public class OrcscParser {
 
   @Contract("null -> null")
   private static Boat convertToBoat(FleetRow r) {
-    if (r==null)
+    if (r == null) {
       return null;
+    }
     Boat b = new Boat();
     b.setBowNo(r.BowNo);
     b.setLOA(r.LOA);
@@ -94,5 +102,21 @@ public class OrcscParser {
     b.setSailNo(r.SailNo);
     b.setRefNo(r.RefNo);
     return b;
+  }
+
+  public static Event getEvent(String orcscString) {
+    try {
+      OrcscFile f = OrcscDeserializer.deserialize(orcscString);
+      return converEventToEvent(f);
+    } catch (Exception e) {
+      Log.e(TAG, "Error deserializing orcsc file", e);
+    }
+    return null;
+  }
+
+  private static Event converEventToEvent(OrcscFile f) {
+    Event e = new Event();
+    e.EventName = f.event.row.EventName;
+    return e;
   }
 }

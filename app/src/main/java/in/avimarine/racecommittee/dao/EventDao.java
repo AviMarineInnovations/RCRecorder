@@ -8,6 +8,7 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 import in.avimarine.racecommittee.objects.Boat;
+import in.avimarine.racecommittee.objects.Event;
 import java.util.List;
 
 /**
@@ -15,32 +16,23 @@ import java.util.List;
  * 06/10/2018.
  */
 @Dao
-public interface BoatDao {
-  @Query("SELECT * FROM boat")
-  LiveData<List<Boat>> getAll();
+public interface EventDao {
+  @Query("SELECT * FROM event")
+  LiveData<List<Event>> getAll();
 
-//  @Query("SELECT * FROM boat WHERE boatUUID IN (:boatIds)")
-//  ArrayList<Boat> loadAllByIds(int[] boatIds);
-
-  @Query("SELECT * FROM boat WHERE sail_no LIKE :sailNo LIMIT 1")
-  LiveData<Boat> findBySailNo(String sailNo);
-
-  @Query("SELECT * FROM boat WHERE bow_no LIKE :bowNo LIMIT 1")
-  LiveData<Boat> findByBowNo(String bowNo);
-
-  @Query("SELECT * FROM boat WHERE yachts_name LIKE :boatName LIMIT 1")
-  LiveData<Boat> findByBoatName(String boatName);
+  @Query("SELECT * FROM event WHERE event_name LIKE :eventName LIMIT 1")
+  LiveData<Event> findByEventName(String eventName);
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  void insertAll(Boat... boats);
+  void insertAll(Event... events);
 
   @Update
-  void update(Boat b);
+  void update(Event e);
 
   @Delete
-  void delete(Boat boat);
+  void delete(Event e);
 
-  @Query("DELETE FROM boat")
+  @Query("DELETE FROM event")
   void deleteAll();
 
 }

@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import in.avimarine.rcrecorder.OrcscParser;
 import in.avimarine.rcrecorder.R;
-import in.avimarine.rcrecorder.dao.BoatRoomDatabase;
+import in.avimarine.rcrecorder.dao.EventsRoomDatabase;
 import in.avimarine.rcrecorder.dao.PopulateDbAsync;
 import in.avimarine.rcrecorder.general.Utils;
 import in.avimarine.rcrecorder.listadapters.RaceListAdapter;
@@ -22,7 +22,7 @@ import java.util.List;
 
 public class RaceSelectActivity extends AppCompatActivity {
 
-  BoatRoomDatabase db;
+  EventsRoomDatabase db;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public class RaceSelectActivity extends AppCompatActivity {
       e.printStackTrace();
     }
     db = Room.databaseBuilder(getApplicationContext(),
-        BoatRoomDatabase.class, "boat_database").build();
+        EventsRoomDatabase.class, "events_database").build();
     List<Race> list = OrcscParser.getRaces(orcscString);
     List<Boat> boats = OrcscParser.getBoats(orcscString);
     if (boats!=null&&!boats.isEmpty()) {

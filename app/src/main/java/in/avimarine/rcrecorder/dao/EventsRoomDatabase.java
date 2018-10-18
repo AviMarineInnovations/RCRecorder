@@ -6,24 +6,26 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 import in.avimarine.rcrecorder.objects.Boat;
+import in.avimarine.rcrecorder.objects.Event;
 
 /**
  * This file is part of an Avi Marine Innovations project: RaceCommittee first created by aayaffe on
  * 06/10/2018.
  */
-@Database(entities = {Boat.class}, version = 1, exportSchema = false)
+@Database(entities = {Boat.class, Event.class}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
-public abstract class BoatRoomDatabase extends RoomDatabase {
+public abstract class EventsRoomDatabase extends RoomDatabase {
   public abstract BoatDao boatDao();
+  public abstract EventDao eventDao();
 
-  private static volatile BoatRoomDatabase instance;
+  private static volatile EventsRoomDatabase instance;
 
-  static BoatRoomDatabase getDatabase(final Context context) {
+  static EventsRoomDatabase getDatabase(final Context context) {
     if (instance == null) {
-      synchronized (BoatRoomDatabase.class) {
+      synchronized (EventsRoomDatabase.class) {
         if (instance == null) {
           instance = Room.databaseBuilder(context.getApplicationContext(),
-              BoatRoomDatabase.class, "boat_database")
+              EventsRoomDatabase.class, "events_database")
               .build();
         }
       }

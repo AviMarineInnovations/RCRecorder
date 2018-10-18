@@ -11,7 +11,6 @@ import in.avimarine.rcrecorder.objects.Event;
 import in.avimarine.rcrecorder.objects.Race;
 import java.util.ArrayList;
 import java.util.List;
-import org.jetbrains.annotations.Contract;
 
 /**
  * This file is part of an Avi Marine Innovations project: RaceCommittee first created by aayaffe on
@@ -57,7 +56,6 @@ public class OrcscParser {
     return ret;
   }
 
-  @Contract("null -> null")
   private static Race convertToRace(RaceRow rr) {
     if (rr == null) {
       return null;
@@ -89,7 +87,6 @@ public class OrcscParser {
     return ret;
   }
 
-  @Contract("null -> null")
   private static Boat convertToBoat(FleetRow r) {
     if (r == null) {
       return null;

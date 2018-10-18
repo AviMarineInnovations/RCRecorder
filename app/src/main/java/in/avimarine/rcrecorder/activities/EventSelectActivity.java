@@ -14,8 +14,8 @@ import android.widget.ListView;
 import com.amitshekhar.DebugDB;
 import in.avimarine.rcrecorder.OrcscParser;
 import in.avimarine.rcrecorder.R;
-import in.avimarine.rcrecorder.dao.EventRoomDatabase;
 import in.avimarine.rcrecorder.dao.EventViewModel;
+import in.avimarine.rcrecorder.dao.EventsRoomDatabase;
 import in.avimarine.rcrecorder.general.Utils;
 import in.avimarine.rcrecorder.listadapters.EventListAdapter;
 import in.avimarine.rcrecorder.objects.Event;
@@ -29,7 +29,7 @@ public class EventSelectActivity extends AppCompatActivity {
 
   private static final int READ_REQUEST_CODE = 42;
   private static final String TAG = "EventSelectActivity";
-  EventRoomDatabase db;
+  EventsRoomDatabase db;
   private EventViewModel mEventViewModel;
   private EventListAdapter adapter;
 
@@ -39,7 +39,7 @@ public class EventSelectActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
     DebugDB.getAddressLog();
     db = Room.databaseBuilder(getApplicationContext(),
-        EventRoomDatabase.class, "event_database").build();
+        EventsRoomDatabase.class, "events_database").build();
     FloatingActionButton fab = findViewById(R.id.fab);
     fab.setOnClickListener(new View.OnClickListener() {
       @Override

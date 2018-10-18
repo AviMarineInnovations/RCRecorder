@@ -12,7 +12,7 @@ public class PopulateDbAsync extends AsyncTask<Boat, Void, Void> {
   private final BoatDao mDao;
 
 
-  public PopulateDbAsync(BoatRoomDatabase db) {
+  public PopulateDbAsync(EventsRoomDatabase db) {
     mDao = db.boatDao();
   }
 

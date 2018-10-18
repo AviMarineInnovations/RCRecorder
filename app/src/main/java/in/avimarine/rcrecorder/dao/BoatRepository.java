@@ -16,7 +16,7 @@ public class BoatRepository {
   private LiveData<List<Boat>> mAllBoats;
 
   BoatRepository(Application application) {
-    BoatRoomDatabase db = BoatRoomDatabase.getDatabase(application);
+    EventsRoomDatabase db = EventsRoomDatabase.getDatabase(application);
     mBoatDao = db.boatDao();
     mAllBoats = mBoatDao.getAll();
   }

@@ -16,7 +16,7 @@ public class EventRepository {
   private LiveData<List<Event>> mAllEvents;
 
   EventRepository(Application application) {
-    EventRoomDatabase db = EventRoomDatabase.getDatabase(application);
+    EventsRoomDatabase db = EventsRoomDatabase.getDatabase(application);
     mEventDao = db.eventDao();
     mAllEvents = mEventDao.getAll();
   }

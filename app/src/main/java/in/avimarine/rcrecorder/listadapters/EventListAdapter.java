@@ -19,16 +19,10 @@ import java.util.List;
 public class EventListAdapter extends ArrayAdapter<Event> {
 
   private final Context context;
-  private List<Event> values = new ArrayList<>();
 
   public EventListAdapter(Context context) {
     super(context, -1);
     this.context = context;
-  }
-
-  @Override
-  public int getCount() {
-    return values.size();
   }
 
   @NonNull
@@ -38,14 +32,18 @@ public class EventListAdapter extends ArrayAdapter<Event> {
         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     View rowView = inflater.inflate(R.layout.list_item, parent, false);
     TextView firstLine = rowView.findViewById(R.id.firstLine);
-//    TextView secondLine = rowView.findViewById(R.id.secondLine);
-    firstLine.setText(values.get(position).EventName);
-//    secondLine.setText(values[position].StartTime.toString());
+    firstLine.setText(getItem(position).name);
     return rowView;
   }
 
   public void setEvents(List<Event> events) {
-    values = events;
+    clear();
+    addAll(events);
+    notifyDataSetChanged();
+  }
+
+  public Event getEvent(int id) {
+    return getItem(id);
   }
 }
 

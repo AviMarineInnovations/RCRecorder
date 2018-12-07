@@ -19,7 +19,7 @@ public interface EventDao {
   @Query("SELECT * FROM event")
   LiveData<List<Event>> getAll();
 
-  @Query("SELECT * FROM event WHERE event_name LIKE :eventName LIMIT 1")
+  @Query("SELECT * FROM event WHERE name LIKE :eventName LIMIT 1")
   LiveData<Event> findByEventName(String eventName);
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)

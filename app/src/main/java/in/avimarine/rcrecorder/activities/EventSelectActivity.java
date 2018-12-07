@@ -16,6 +16,7 @@ import in.avimarine.rcrecorder.OrcscParser;
 import in.avimarine.rcrecorder.R;
 import in.avimarine.rcrecorder.dao.EventViewModel;
 import in.avimarine.rcrecorder.dao.EventsRoomDatabase;
+import in.avimarine.rcrecorder.dao.PopulateDbAsync;
 import in.avimarine.rcrecorder.general.Utils;
 import in.avimarine.rcrecorder.listadapters.EventListAdapter;
 import in.avimarine.rcrecorder.objects.Event;
@@ -50,16 +51,21 @@ public class EventSelectActivity extends AppCompatActivity {
     adapter = new EventListAdapter(this);
     mEventViewModel = ViewModelProviders.of(this).get(EventViewModel.class);
     mEventViewModel.getAllEvents().observe(this, events -> {
+      Log.d(TAG, "Got " + events.size() + "events");
       // Update the cached copy of the boats in the adapter.
       adapter.setEvents(events);
     });
     final ListView listview = findViewById(R.id.listview);
     listview.setAdapter(adapter);
-    listview.setOnItemClickListener((parent, view, position, id) -> {
-      parseAndStartActivity(null); //TODO pass proper data to raceselectactivity
+    listview.setOnItemClickListener((parent, view, position, id) -> startRaceSelectActivity(
+        adapter.getEvent((int) id).getKey()));
+    listview.setOnItemLongClickListener((adapterView, view, i, l) -> {
+      mEventViewModel.delete(adapter.getEvent(i));
+      return true;
     });
 
   }
+
 
   private void openOrcscFile() {
     Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -97,8 +103,7 @@ public class EventSelectActivity extends AppCompatActivity {
         if (orcscString == null) {
           Log.e(TAG, "Error parsing file");
         }
-        Event e = OrcscParser.getEvent(orcscString);
-        mEventViewModel.insert(e);
+//
         Log.i(TAG, "Uri: " + uri.toString());
         parseAndStartActivity(uri);
       }
@@ -106,9 +111,26 @@ public class EventSelectActivity extends AppCompatActivity {
   }
 
   private void parseAndStartActivity(Uri uri) {
+    String orcscString = null;
+    try {
+      orcscString = Utils.readTextFromUri(uri, this);
+    } catch (IOException e) {
+      Log.e(TAG, "Error reading orcsc file", e);
+    }
+    db = Room.databaseBuilder(getApplicationContext(),
+        EventsRoomDatabase.class, "events_database").build();
+    Event e = OrcscParser.getEvent(orcscString);
+    mEventViewModel.insert(e);
+    PopulateDbAsync pda = new PopulateDbAsync(db,e);
+    pda.execute(orcscString);
+    Log.d(TAG,"Adding new event to DB");
+  }
+
+  private void startRaceSelectActivity(String key) {
     Log.d(TAG, "Opening activity");
     Bundle b = new Bundle();
-    b.putString("URI", uri.toString());
+    b.putString("EVENTKEY", key);
+    b.putString("URI", "");
     Intent i = new Intent(this, RaceSelectActivity.class);
     i.putExtras(b);
     startActivity(i);

@@ -15,8 +15,7 @@ import java.util.Date;
  */
 @Entity()
 public class Boat implements Parcelable {
-//  @PrimaryKey
-//  private UUID boatUUID;
+
   @ColumnInfo(name = "ref_no")
   private String RefNo;
   @PrimaryKey
@@ -37,18 +36,8 @@ public class Boat implements Parcelable {
   private Date OCS;
   @ColumnInfo(name = "finish")
   private Date finish;
-//
-//  public Boat() {
-//    boatUUID = UUID.randomUUID();
-//  }
-//
-//  public UUID getBoatUUID() {
-//    return boatUUID;
-//  }
-//
-//  public void setBoatUUID(String uuid) {
-//    boatUUID = UUID.fromString(uuid);
-//  }
+  @ColumnInfo(name = "event_key")
+  private String eventKey;
 
   public int getBowNo() {
     return bowNo;
@@ -105,26 +94,26 @@ public class Boat implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel p, int i) {
-//    p.writeString(boatUUID.toString());
     p.writeString(getRefNo());
     p.writeString(getSailNo());
     p.writeString(getYachtsName());
     p.writeString(getYachtsClass());
     p.writeDouble(getLOA());
     p.writeInt(getBowNo());
+    p.writeString(eventKey);
   }
 
   public static final Creator<Boat> CREATOR =
       new Creator<Boat>() {
         public Boat createFromParcel(Parcel in) {
           Boat boat = new Boat();
-//          boat.setBoatUUID(in.readString());
           boat.setRefNo(in.readString());
           boat.setSailNo(in.readString());
           boat.setYachtsName(in.readString());
           boat.setYachtsClass(in.readString());
           boat.setLOA(in.readDouble());
           boat.setBowNo(in.readInt());
+          boat.setEventKey(in.readString());
           return boat;
         }
 
@@ -156,5 +145,13 @@ public class Boat implements Parcelable {
 
   public Date getFinish() {
     return finish;
+  }
+
+  public String getEventKey() {
+    return eventKey;
+  }
+
+  public void setEventKey(String eventKey) {
+    this.eventKey = eventKey;
   }
 }

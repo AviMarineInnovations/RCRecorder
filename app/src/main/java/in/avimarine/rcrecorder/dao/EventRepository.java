@@ -25,7 +25,7 @@ public class EventRepository {
     return mAllEvents;
   }
 
-  public void insert (Event event) {
+  public void insert(Event event) {
     new insertAsyncTask(mEventDao).execute(event);
   }
 
@@ -51,6 +51,7 @@ public class EventRepository {
       return null;
     }
   }
+
   private static class removeAsyncTask extends AsyncTask<Event, Void, Void> {
 
     private EventDao mAsyncTaskDao;
@@ -66,9 +67,10 @@ public class EventRepository {
     }
   }
 
-  private class updateAsyncTask extends AsyncTask<Event, Void, Void>{
+  private class updateAsyncTask extends AsyncTask<Event, Void, Void> {
 
     private EventDao mAsyncTaskDao;
+
     public updateAsyncTask(EventDao dao) {
       mAsyncTaskDao = dao;
     }

@@ -61,16 +61,16 @@ public class OrcscParser {
       return null;
     }
     Race r = new Race();
-    r.ClassId = rr.ClassId;
-    r.Coeff = rr.Coeff;
-    r.CourseId = rr.CourseId;
-    r.Discardable = rr.Discardable;
-    r.Distance = rr.Distance;
-    r.Provisional = rr.Provisional;
-    r.RaceId = rr.RaceId;
-    r.RaceName = rr.RaceName;
-    r.ScoringType = rr.ScoringType;
-    r.StartTime = rr.StartTime;
+    r.classId = rr.ClassId;
+    r.coeff = rr.Coeff;
+    r.courseId = rr.CourseId;
+    r.discardable = rr.Discardable;
+    r.distance = rr.Distance;
+    r.provisional = rr.Provisional;
+    r.orcRaceId = rr.RaceId;
+    r.raceName = rr.RaceName;
+    r.scoringType = rr.ScoringType;
+    r.start = rr.StartTime;
     return r;
   }
 
@@ -113,7 +113,7 @@ public class OrcscParser {
 
   private static Event converEventToEvent(OrcscFile f) {
     Event e = new Event();
-    e.EventName = f.event.row.EventName;
+    e.name = f.event.row.EventName;
     return e;
   }
 }

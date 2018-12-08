@@ -48,7 +48,7 @@ public class LargeFleetRaceInputFragment extends TabFragement{
     return ret;
   }
   @Override
-  public LargeFleetRaceInputFragment newInstance(int sectionNumber, ArrayList<Boat> boats) {
+  public LargeFleetRaceInputFragment newInstance(int sectionNumber, String eventKey, int raceId, String classId) {
     LargeFleetRaceInputFragment fragment = new LargeFleetRaceInputFragment();
     Bundle args = new Bundle();
     args.putInt(ARG_SECTION_NUMBER, sectionNumber);
@@ -110,7 +110,7 @@ public class LargeFleetRaceInputFragment extends TabFragement{
         o.setFinish(new Date());
       }
     }
-    mBoatViewModel.updtae(o);
+    mBoatViewModel.update(o);
   }
 
   private void clearTvs() {

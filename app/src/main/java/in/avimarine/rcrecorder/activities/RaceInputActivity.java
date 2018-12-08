@@ -31,13 +31,17 @@ public class RaceInputActivity extends AppCompatActivity {
    */
   private SectionsPagerAdapter mSectionsPagerAdapter;
   private static final String TAG = "RaceInputActivity";
+  private static final String FRAGMENTCLASS = "FRAGMENT_CLASS";
   /**
    * The {@link ViewPager} that will host the section contents.
    */
   private ViewPager mViewPager;
-  protected static ArrayList<Boat> boats;
+//  protected static ArrayList<Boat> boats;
   protected static int radioId = R.id.identification_radio_sailno;
   protected static IdType sortBy = IdType.SAIL_NO;
+  private String eventKey;
+  private int raceId;
+  private String classId;
 //  protected static UpdateInitiator ui;
 
   @Override
@@ -45,12 +49,15 @@ public class RaceInputActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_race_input);
     Bundle b = this.getIntent().getExtras();
+    eventKey = b.getString("EVENTKEY");
+    raceId = b.getInt("RACEID");
+    classId = b.getString("CLASSID");
     int fragement = 1;
-    try {
-      fragement = b.getInt("FRAGMENT_CLASS");
-    }catch (Exception e) {
-      Log.d(TAG,"No FRAGMENT_CLASS value available");
-    }
+//    try {//TODO return when ready for big input activity
+//      fragement = b.getInt(FRAGMENTCLASS);
+//    }catch (Exception e) {
+//      Log.d(TAG,"No FRAGMENT_CLASS value available");
+//    }
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -108,11 +115,14 @@ public class RaceInputActivity extends AppCompatActivity {
       if (b==null)
         b=new Bundle();
       if (mSectionsPagerAdapter.fragementClass == LargeFleetRaceInputFragment.class) {
-        b.putInt("FRAGMENT_CLASS", 1);
+        b.putInt(FRAGMENTCLASS, 1);
       }
       else {
-        b.putInt("FRAGMENT_CLASS", 0);
+        b.putInt(FRAGMENTCLASS, 0);
       }
+      b.putString("EVENTKEY",eventKey);
+      b.putInt("RACEID",raceId);
+      b.putString("CLASSID",classId);
       mIntent.putExtras(b);
       finish();
       startActivity(mIntent);
@@ -155,7 +165,7 @@ public class RaceInputActivity extends AppCompatActivity {
     public Fragment getItem(int position) {
       // getItem is called to instantiate the fragment for the given page.
       try {
-        return fragementClass.newInstance().newInstance(position + 1,boats);
+        return fragementClass.newInstance().newInstance(position + 1,eventKey,raceId, classId);
       } catch (InstantiationException | IllegalAccessException e) {
         Log.e(TAG,"Instantiation error",e);
       }
@@ -168,21 +178,21 @@ public class RaceInputActivity extends AppCompatActivity {
     }
   }
 
-  public interface UpdateListener {
-    void update();
-  }
-
-  class UpdateInitiator {
-    private List<UpdateListener> listeners = new ArrayList<>();
-
-    void addListener(UpdateListener toAdd) {
-      listeners.add(toAdd);
-    }
-
-    void declareUpdate() {
-      // Notify everybody that may be interested.
-      for (UpdateListener ul : listeners)
-        ul.update();
-    }
-  }
+//  public interface UpdateListener {
+//    void update();
+//  }
+//
+//  class UpdateInitiator {
+//    private List<UpdateListener> listeners = new ArrayList<>();
+//
+//    void addListener(UpdateListener toAdd) {
+//      listeners.add(toAdd);
+//    }
+//
+//    void declareUpdate() {
+//      // Notify everybody that may be interested.
+//      for (UpdateListener ul : listeners)
+//        ul.update();
+//    }
+//  }
 }

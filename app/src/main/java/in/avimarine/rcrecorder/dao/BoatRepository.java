@@ -15,7 +15,7 @@ public class BoatRepository {
   private BoatDao mBoatDao;
   private LiveData<List<Boat>> mAllBoats;
 
-  BoatRepository(Application application) {
+  public BoatRepository(Application application) {
     EventsRoomDatabase db = EventsRoomDatabase.getDatabase(application);
     mBoatDao = db.boatDao();
     mAllBoats = mBoatDao.getAll();
@@ -34,8 +34,20 @@ public class BoatRepository {
     new removeAsyncTask(mBoatDao).execute(boat);
   }
 
+  public void deleteAll() {
+    new removeAllAsyncTask(mBoatDao).execute();
+  }
+
   public void update(Boat boat) {
     new updateAsyncTask(mBoatDao).execute(boat);
+  }
+
+  public LiveData<List<Boat>> getBoatsByEventId(String eventId) {
+    return mBoatDao.findByEventKey(eventId);
+  }
+
+  public LiveData<List<Boat>> getBoatsByEventIdAndClassId(String eventId, String classId) {
+    return mBoatDao.findByEventKeyAndClassId(eventId,classId);
   }
 
   private static class insertAsyncTask extends AsyncTask<Boat, Void, Void> {
@@ -63,6 +75,21 @@ public class BoatRepository {
     @Override
     protected Void doInBackground(final Boat... params) {
       mAsyncTaskDao.delete(params[0]);
+      return null;
+    }
+  }
+
+  private static class removeAllAsyncTask extends AsyncTask<Void, Void, Void> {
+
+    private BoatDao mAsyncTaskDao;
+
+    removeAllAsyncTask(BoatDao dao) {
+      mAsyncTaskDao = dao;
+    }
+
+    @Override
+    protected Void doInBackground(Void... voids) {
+      mAsyncTaskDao.deleteAll();
       return null;
     }
   }

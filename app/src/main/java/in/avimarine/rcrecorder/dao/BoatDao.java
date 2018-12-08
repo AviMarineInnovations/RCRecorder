@@ -19,9 +19,6 @@ public interface BoatDao {
   @Query("SELECT * FROM boat")
   LiveData<List<Boat>> getAll();
 
-//  @Query("SELECT * FROM boat WHERE boatUUID IN (:boatIds)")
-//  ArrayList<Boat> loadAllByIds(int[] boatIds);
-
   @Query("SELECT * FROM boat WHERE sail_no LIKE :sailNo LIMIT 1")
   LiveData<Boat> findBySailNo(String sailNo);
 
@@ -30,6 +27,12 @@ public interface BoatDao {
 
   @Query("SELECT * FROM boat WHERE yachts_name LIKE :boatName LIMIT 1")
   LiveData<Boat> findByBoatName(String boatName);
+
+  @Query("SELECT * FROM boat WHERE event_key LIKE :eventId")
+  LiveData<List<Boat>> findByEventKey(String eventId);
+
+  @Query("SELECT * FROM boat WHERE event_key LIKE :eventId AND class_id LIKE :classId")
+  LiveData<List<Boat>> findByEventKeyAndClassId(String eventId, String classId);
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   void insertAll(Boat... boats);
@@ -41,6 +44,8 @@ public interface BoatDao {
   void delete(Boat boat);
 
   @Query("DELETE FROM boat")
-  void deleteAllBoats();
+  void deleteAll();
+
+
 
 }

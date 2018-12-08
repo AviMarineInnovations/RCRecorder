@@ -1,6 +1,7 @@
 package in.avimarine.rcrecorder.dao;
 
 import android.arch.persistence.room.TypeConverter;
+import in.avimarine.rcrecorder.FinishType;
 import java.util.Date;
 
 /**
@@ -16,5 +17,15 @@ public class Converters {
   @TypeConverter
   public static Long dateToTimestamp(Date date) {
     return date == null ? null : date.getTime();
+  }
+
+  @TypeConverter
+  public static FinishType fromFinishType(Integer value) {
+    return value == null ? null : FinishType.valueOf(value);
+  }
+
+  @TypeConverter
+  public static Integer finishTypeToInt(FinishType ft) {
+    return ft == null ? null : ft.getValue();
   }
 }

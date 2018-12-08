@@ -1,6 +1,5 @@
 package in.avimarine.rcrecorder.fragments;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -16,10 +15,9 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import in.avimarine.rcrecorder.IdType;
 import in.avimarine.rcrecorder.R;
-import in.avimarine.rcrecorder.dao.BoatViewModel;
+import in.avimarine.rcrecorder.RaceResultsManager;
 import in.avimarine.rcrecorder.listadapters.BoatGridAdapter;
 import in.avimarine.rcrecorder.objects.Boat;
-import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -32,22 +30,31 @@ public class RaceInputFragment extends TabFragement {
    * The fragment argument representing the section number for this fragment.
    */
   private static final String ARG_SECTION_NUMBER = "section_number";
-  private int sectionNumber;
-
-  private BoatViewModel mBoatViewModel;
+  private static final String ARG_EVENT_KEY = "EVENT_KEY";
+  private static final String ARG_RACE_ID = "RACE_ID";
+  private static final String ARG_CLASS_ID = "CLASS_ID";
   BroadcastReceiver mTabAndSortReceiver;
+  private int sectionNumber;
   private IdType sortBy;
   private IdType idType = IdType.SAIL_NO;
   private GridView gridView;
   private BoatGridAdapter adapter;
+  private RaceResultsManager raceResultsManager;
+  private String eventKey;
+  private int raceId;
+  private String classId;
+
   /**
    * Returns a new instance of this fragment for the given section number.
    */
   @Override
-  public RaceInputFragment newInstance(int sectionNumber, ArrayList<Boat> list) {
+  public RaceInputFragment newInstance(int sectionNumber, String eventKey, int raceId, String classId) {
     RaceInputFragment fragment = new RaceInputFragment();
     Bundle args = new Bundle();
     args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+    args.putString(ARG_EVENT_KEY, eventKey);
+    args.putInt(ARG_RACE_ID, raceId);
+    args.putString(ARG_CLASS_ID, classId);
     fragment.setArguments(args);
     return fragment;
   }
@@ -57,16 +64,20 @@ public class RaceInputFragment extends TabFragement {
       Bundle savedInstanceState) {
     View rootView = inflater.inflate(R.layout.fragment_race_input, container, false);
     sectionNumber = getArguments().getInt(ARG_SECTION_NUMBER);
+    eventKey = getArguments().getString(ARG_EVENT_KEY);
+    raceId = getArguments().getInt(ARG_RACE_ID);
+    classId = getArguments().getString(ARG_CLASS_ID);
     mTabAndSortReceiver = new BroadcastReceiver() {
       @Override
       public void onReceive(Context context, Intent intent) {
         Bundle b = intent.getExtras();
         if (b == null) {
           Log.e(TAG, "intent is null in receiver");
-          return;
         }
-        String sortByString = b.getString("SORTBY");
-        sortBy = IdType.valueOf(sortByString);
+        else {
+          String sortByString = b.getString("SORTBY");
+          sortBy = IdType.valueOf(sortByString);
+        }
         generateButtonTable(gridView, idType, sectionNumber, sortBy);
       }
     };
@@ -76,12 +87,8 @@ public class RaceInputFragment extends TabFragement {
     adapter = new BoatGridAdapter(getContext(), sectionNumber, IdType.BOAT_NAME);
     gridView.setAdapter(adapter);
     addRadioButtonClickListeneres(rootView);
-    mBoatViewModel = ViewModelProviders.of(getActivity()).get(BoatViewModel.class);
-    mBoatViewModel.getAllBoats().observe(this, boats -> {
-      // Update the cached copy of the boats in the adapter.
-      adapter.setBoats(boats);
-      generateButtonTable(gridView, idType, sectionNumber, sortBy);
-    });
+    raceResultsManager = new RaceResultsManager(getActivity(), adapter, eventKey, raceId, classId);
+    generateButtonTable(gridView, idType, sectionNumber, sortBy);
     return rootView;
   }
 
@@ -118,14 +125,16 @@ public class RaceInputFragment extends TabFragement {
   }
 
   private void generateButtonTable(GridView gv, IdType idType, int tab, IdType sortBy) {
-    if (idType!=null)
+    if (idType != null) {
       adapter.setIdType(idType);
-    else
+    } else {
       Log.d(TAG, "Got null idtype");
-    if (sortBy!=null)
+    }
+    if (sortBy != null) {
       adapter.setSortBy(sortBy);
-    else
+    } else {
       Log.d(TAG, "Got null sortby type");
+    }
     adapter.notifyDataSetChanged();
     gv.setOnItemClickListener((parent, view, position, id) -> {
       final Boat boat = (Boat) parent.getItemAtPosition(position);
@@ -141,7 +150,8 @@ public class RaceInputFragment extends TabFragement {
       return true;
     });
   }
-  private  void setItemBg(Boat o, View rl, int tab) {
+
+  private void setItemBg(Boat o, View rl, int tab) {
     if (tab == 1) {
       if (o.getCheckIn() != null) {
         rl.setBackgroundColor(Color.CYAN);
@@ -163,31 +173,31 @@ public class RaceInputFragment extends TabFragement {
     }
   }
 
-  private void btnOnLongClick(int tab, Boat o) {
+  private void btnOnLongClick(int tab, Boat b) {
     if (tab == 1) {
-      o.setCheckIn(null);
+      b.setCheckIn(null);
     } else if (tab == 2) {
-      o.setOCS(null);
+      b.setOCS(null);
     } else {
-      o.setFinish(null);
+      b.setFinish(null);
     }
-    mBoatViewModel.updtae(o);
+    raceResultsManager.update(b, raceId);
   }
 
-  private void btnOnClick(int tab, Boat o) {
+  private void btnOnClick(int tab, Boat b) {
     if (tab == 1) {
-      if (o.getCheckIn() == null) {
-        o.setCheckIn(new Date());
+      if (b.getCheckIn() == null) {
+        b.setCheckIn(new Date());
       }
     } else if (tab == 2) {
-      if (o.getOCS() == null) {
-        o.setOCS(new Date());
+      if (b.getOCS() == null) {
+        b.setOCS(new Date());
       }
     } else {
-      if (o.getFinish() == null) {
-        o.setFinish(new Date());
+      if (b.getFinish() == null) {
+        b.setFinish(new Date());
       }
     }
-    mBoatViewModel.updtae(o);
+    raceResultsManager.update(b, raceId);
   }
 }

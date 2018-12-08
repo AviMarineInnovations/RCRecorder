@@ -8,15 +8,23 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 import com.amitshekhar.DebugDB;
 import in.avimarine.rcrecorder.OrcscParser;
 import in.avimarine.rcrecorder.R;
+import in.avimarine.rcrecorder.dao.BoatRepository;
+import in.avimarine.rcrecorder.dao.EventRepository;
 import in.avimarine.rcrecorder.dao.EventViewModel;
 import in.avimarine.rcrecorder.dao.EventsRoomDatabase;
 import in.avimarine.rcrecorder.dao.PopulateDbAsync;
+import in.avimarine.rcrecorder.dao.RaceRepository;
+import in.avimarine.rcrecorder.dao.ResultRepository;
 import in.avimarine.rcrecorder.general.Utils;
 import in.avimarine.rcrecorder.listadapters.EventListAdapter;
 import in.avimarine.rcrecorder.objects.Event;
@@ -39,6 +47,10 @@ public class EventSelectActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     DebugDB.getAddressLog();
+    Toolbar toolbar = findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    getSupportActionBar().setTitle("Select Event");
     db = Room.databaseBuilder(getApplicationContext(),
         EventsRoomDatabase.class, "events_database").build();
     FloatingActionButton fab = findViewById(R.id.fab);
@@ -66,6 +78,33 @@ public class EventSelectActivity extends AppCompatActivity {
 
   }
 
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    // Inflate the menu; this adds items to the action bar if it is present.
+    getMenuInflater().inflate(R.menu.menu_event_select, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    // Handle action bar item clicks here. The action bar will
+    // automatically handle clicks on the Home/Up button, so long
+    // as you specify a parent activity in AndroidManifest.xml.
+    int id = item.getItemId();
+    if (id == R.id.action_settings) {
+      return true;
+    } else if(id == R.id.action_reset_all){
+      resetAllDb();
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
+  private void resetAllDb() {
+    new EventRepository(getApplication()).deleteAll();
+    new ResultRepository(getApplication()).deleteAll();
+    new RaceRepository(getApplication()).deleteAll();
+    new BoatRepository(getApplication()).deleteAll();
+  }
 
   private void openOrcscFile() {
     Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -103,14 +142,13 @@ public class EventSelectActivity extends AppCompatActivity {
         if (orcscString == null) {
           Log.e(TAG, "Error parsing file");
         }
-//
         Log.i(TAG, "Uri: " + uri.toString());
-        parseAndStartActivity(uri);
+        addFileToDb(uri);
       }
     }
   }
 
-  private void parseAndStartActivity(Uri uri) {
+  private void addFileToDb(Uri uri) {
     String orcscString = null;
     try {
       orcscString = Utils.readTextFromUri(uri, this);
@@ -120,6 +158,11 @@ public class EventSelectActivity extends AppCompatActivity {
     db = Room.databaseBuilder(getApplicationContext(),
         EventsRoomDatabase.class, "events_database").build();
     Event e = OrcscParser.getEvent(orcscString);
+    if (e==null){
+      Log.e(TAG,"Unable to parse file");
+      Toast.makeText(this,"Unable to parse file",Toast.LENGTH_LONG).show();
+      return;
+    }
     mEventViewModel.insert(e);
     PopulateDbAsync pda = new PopulateDbAsync(db,e);
     pda.execute(orcscString);

@@ -15,7 +15,7 @@ public class EventRepository {
   private EventDao mEventDao;
   private LiveData<List<Event>> mAllEvents;
 
-  EventRepository(Application application) {
+  public EventRepository(Application application) {
     EventsRoomDatabase db = EventsRoomDatabase.getDatabase(application);
     mEventDao = db.eventDao();
     mAllEvents = mEventDao.getAll();
@@ -31,6 +31,10 @@ public class EventRepository {
 
   public void delete(Event event) {
     new removeAsyncTask(mEventDao).execute(event);
+  }
+
+  public void deleteAll() {
+    new removeAllAsyncTask(mEventDao).execute();
   }
 
   public void update(Event event) {
@@ -63,6 +67,21 @@ public class EventRepository {
     @Override
     protected Void doInBackground(final Event... params) {
       mAsyncTaskDao.delete(params[0]);
+      return null;
+    }
+  }
+
+  private static class removeAllAsyncTask extends AsyncTask<Void, Void, Void> {
+
+    private EventDao mAsyncTaskDao;
+
+    removeAllAsyncTask(EventDao dao) {
+      mAsyncTaskDao = dao;
+    }
+
+    @Override
+    protected Void doInBackground(Void... voids) {
+      mAsyncTaskDao.deleteAll();
       return null;
     }
   }

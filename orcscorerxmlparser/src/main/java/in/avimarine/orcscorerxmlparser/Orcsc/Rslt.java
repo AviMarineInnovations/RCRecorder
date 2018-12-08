@@ -9,7 +9,7 @@ import org.simpleframework.xml.Root;
  * 01/10/2018.
  */
 @Root
-class Rslt {
+public class Rslt {
   @ElementList(inline = true, required = false)
-  private List<RsltRow> list;
+  public List<RsltRow> list;
 }

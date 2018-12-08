@@ -41,6 +41,6 @@ public interface RaceDao {
   void delete(Race race);
 
   @Query("DELETE FROM race")
-  void deleteAllRaces();
+  void deleteAll();
 
 }

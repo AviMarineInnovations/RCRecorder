@@ -9,7 +9,7 @@ import org.simpleframework.xml.Root;
  * 01/10/2018.
  */
 @Root(name = "ROW")
-class RsltRow {
+public class RsltRow {
   @Element (required = false)
   public double TOD;
   @Element (required = false)

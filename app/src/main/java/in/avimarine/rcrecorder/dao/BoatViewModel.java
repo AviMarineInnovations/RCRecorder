@@ -26,8 +26,16 @@ import java.util.List;
 
     public void insert(Boat boat) { mRepository.insert(boat); }
 
-  public void updtae(Boat boat) { mRepository.update(boat); }
+  public void update(Boat boat) { mRepository.update(boat); }
 
     public void delete(Boat boat) {mRepository.delete(boat);}
+
+  public LiveData<List<Boat>> getBoatsByEventId(String eventId) {
+    return mRepository.getBoatsByEventId(eventId);
   }
+
+  public LiveData<List<Boat>> getBoatsByEventIdAndClassId(String eventId, String classId) {
+    return mRepository.getBoatsByEventIdAndClassId(eventId,classId);
+  }
+}
 

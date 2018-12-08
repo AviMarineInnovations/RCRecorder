@@ -24,11 +24,11 @@ public class OrcscFile {
   @Element (name = "Race", required = false)
   public Race race;
   @Element (name = "Rslt", required = false)
-  Rslt rslt;
+  public Rslt rslt;
   @Element (name = "Legs", required = false)
-  Legs legs;
+  public Legs legs;
   @Element (name = "reports", required = false)
-  Reports reports;
+  public Reports reports;
 }
 
 

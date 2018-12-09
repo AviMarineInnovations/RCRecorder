@@ -15,4 +15,5 @@
   <string name="action_sortby_name">Sortby Boat Name</string>
   <string name="action_fleet_size">Change Input Option</string>
   <string name="action_reset_all">Delete all data</string>
+  <string name="action_export">Export</string>
 </resources>

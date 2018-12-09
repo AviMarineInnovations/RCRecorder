@@ -8,6 +8,6 @@ import org.simpleframework.xml.ElementList;
  * 01/10/2018.
  */
 class Legs {
-  @ElementList(inline = true)
+  @ElementList(inline = true, required = false)
   private List<LegRow> list;
 }

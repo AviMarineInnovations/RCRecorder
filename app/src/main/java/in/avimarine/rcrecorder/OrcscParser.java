@@ -90,7 +90,8 @@ public class OrcscParser {
     }
     for (RaceRow r : f.race.list) {
       Race b = convertToRace(r);
-      ret.add(b);
+      if (b!=null)
+        ret.add(b);
     }
     return ret;
   }

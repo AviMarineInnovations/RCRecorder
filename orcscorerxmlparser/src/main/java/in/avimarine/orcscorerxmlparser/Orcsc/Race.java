@@ -1,7 +1,6 @@
 package in.avimarine.orcscorerxmlparser.Orcsc;
 
 import java.util.List;
-import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 
 /**
@@ -9,6 +8,6 @@ import org.simpleframework.xml.ElementList;
  * 01/10/2018.
  */
 public class Race {
-  @ElementList(inline = true)
+  @ElementList(inline = true, required = false)
   public List<RaceRow> list;
 }

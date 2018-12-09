@@ -15,7 +15,7 @@ import org.simpleframework.xml.transform.RegistryMatcher;
  * 01/10/2018.
  */
 public class OrcscSerializer {
-  public String serialize(OrcscFile fileObject) throws Exception {
+  public static String serialize(OrcscFile fileObject) throws Exception {
     // Maybe you have to correct this or use another / no Locale
     DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
     RegistryMatcher m = new RegistryMatcher();
@@ -26,7 +26,7 @@ public class OrcscSerializer {
     serializer.write(fileObject, sw);
     return sw.toString();
   }
-  public void serialize(OrcscFile fileObject, File f) throws Exception {
+  public static void serialize(OrcscFile fileObject, File f) throws Exception {
     // Maybe you have to correct this or use another / no Locale
     DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
     RegistryMatcher m = new RegistryMatcher();

@@ -7,7 +7,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.convert.AnnotationStrategy;
 import org.simpleframework.xml.core.Persister;
+import org.simpleframework.xml.strategy.Strategy;
 import org.simpleframework.xml.transform.RegistryMatcher;
 
 /**
@@ -20,7 +22,8 @@ public class OrcscSerializer {
     DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
     RegistryMatcher m = new RegistryMatcher();
     m.bind(Date.class, new DateFormatTransformer(format));
-    Serializer serializer = new Persister(m);
+    Strategy s = new AnnotationStrategy();
+    Serializer serializer = new Persister(s,m);
 
     StringWriter sw  = new StringWriter();
     serializer.write(fileObject, sw);
@@ -31,7 +34,8 @@ public class OrcscSerializer {
     DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
     RegistryMatcher m = new RegistryMatcher();
     m.bind(Date.class, new DateFormatTransformer(format));
-    Serializer serializer = new Persister(m);
+    Strategy s = new AnnotationStrategy();
+    Serializer serializer = new Persister(s,m);
     serializer.write(fileObject, f);
   }
 }

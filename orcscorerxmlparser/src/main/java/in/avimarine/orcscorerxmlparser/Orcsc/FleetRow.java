@@ -1,8 +1,10 @@
 package in.avimarine.orcscorerxmlparser.Orcsc;
 
+import in.avimarine.orcscorerxmlparser.EmptyElementConverter;
 import java.util.Date;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
+import org.simpleframework.xml.convert.Convert;
 
 /**
  * This file is part of an Avi Marine Innovations project: RaceCommittee first created by aayaffe on
@@ -53,7 +55,8 @@ public class FleetRow {
   @Element (required = false)
   public Date IssueDate;
   @Element (required = false)
-  public int TimeLimitSecs;
+  @Convert(EmptyElementConverter.class)
+  public Integer TimeLimitSecs;
   @Element (required = false)
   public String NatAuth;
   @Element (required = false)

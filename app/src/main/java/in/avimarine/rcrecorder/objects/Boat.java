@@ -70,7 +70,7 @@ public class Boat {
   @ColumnInfo(name = "issue_date")
   private Date issueDate;
   @ColumnInfo(name = "time_limit_secs")
-  private int timeLimitSecs;
+  private Integer timeLimitSecs;
   @ColumnInfo(name = "nat_auth")
   private String natAuth;
   @ColumnInfo(name = "bin")
@@ -305,11 +305,11 @@ public class Boat {
     this.issueDate = issueDate;
   }
 
-  public int getTimeLimitSecs() {
+  public Integer getTimeLimitSecs() {
     return timeLimitSecs;
   }
 
-  public void setTimeLimitSecs(int timeLimitSecs) {
+  public void setTimeLimitSecs(Integer timeLimitSecs) {
     this.timeLimitSecs = timeLimitSecs;
   }
 

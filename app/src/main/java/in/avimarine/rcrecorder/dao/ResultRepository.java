@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 import in.avimarine.rcrecorder.objects.Result;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,6 +45,9 @@ public class ResultRepository {
 
   public LiveData<List<Result>> getResultsByEventAndRaceId(String eventId, int raceId) {
     return mResultDao.findByEventKeyAndRaceId(eventId,raceId);
+  }
+  public LiveData<List<Result>> getResultsByEventAndRaceIds(String eventId, int[] raceIds) {
+    return mResultDao.findByEventKeyAndRaceIds(eventId,raceIds);
   }
 
   private static class insertAsyncTask extends AsyncTask<Result, Void, Void> {

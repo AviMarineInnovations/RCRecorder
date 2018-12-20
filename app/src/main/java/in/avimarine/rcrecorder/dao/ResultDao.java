@@ -8,6 +8,7 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 import in.avimarine.rcrecorder.objects.Result;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,6 +34,9 @@ public interface ResultDao {
 
   @Query("SELECT * FROM result WHERE event_key LIKE :eventId AND race_id LIKE :raceId")
   LiveData<List<Result>> findByEventKeyAndRaceId(String eventId, int raceId);
+
+  @Query("SELECT * FROM result WHERE event_key LIKE :eventId AND race_id IN (:raceIds)")
+  LiveData<List<Result>> findByEventKeyAndRaceIds(String eventId, int[] raceIds);
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   void insertAll(Result... results);

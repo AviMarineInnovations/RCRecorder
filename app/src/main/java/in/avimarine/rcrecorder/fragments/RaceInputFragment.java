@@ -18,6 +18,7 @@ import in.avimarine.rcrecorder.R;
 import in.avimarine.rcrecorder.RaceResultsManager;
 import in.avimarine.rcrecorder.listadapters.BoatGridAdapter;
 import in.avimarine.rcrecorder.objects.Boat;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -41,20 +42,18 @@ public class RaceInputFragment extends TabFragement {
   private BoatGridAdapter adapter;
   private RaceResultsManager raceResultsManager;
   private String eventKey;
-  private int raceId;
-  private String classId;
+  private ArrayList<Integer> raceIds;
 
   /**
    * Returns a new instance of this fragment for the given section number.
    */
   @Override
-  public RaceInputFragment newInstance(int sectionNumber, String eventKey, int raceId, String classId) {
+  public RaceInputFragment newInstance(int sectionNumber, String eventKey, ArrayList<Integer> raceIds) {
     RaceInputFragment fragment = new RaceInputFragment();
     Bundle args = new Bundle();
     args.putInt(ARG_SECTION_NUMBER, sectionNumber);
     args.putString(ARG_EVENT_KEY, eventKey);
-    args.putInt(ARG_RACE_ID, raceId);
-    args.putString(ARG_CLASS_ID, classId);
+    args.putIntegerArrayList(ARG_RACE_ID, raceIds);
     fragment.setArguments(args);
     return fragment;
   }
@@ -65,8 +64,7 @@ public class RaceInputFragment extends TabFragement {
     View rootView = inflater.inflate(R.layout.fragment_race_input, container, false);
     sectionNumber = getArguments().getInt(ARG_SECTION_NUMBER);
     eventKey = getArguments().getString(ARG_EVENT_KEY);
-    raceId = getArguments().getInt(ARG_RACE_ID);
-    classId = getArguments().getString(ARG_CLASS_ID);
+    raceIds = getArguments().getIntegerArrayList(ARG_RACE_ID);
     mTabAndSortReceiver = new BroadcastReceiver() {
       @Override
       public void onReceive(Context context, Intent intent) {
@@ -87,7 +85,7 @@ public class RaceInputFragment extends TabFragement {
     adapter = new BoatGridAdapter(getContext(), sectionNumber, IdType.BOAT_NAME);
     gridView.setAdapter(adapter);
     addRadioButtonClickListeneres(rootView);
-    raceResultsManager = new RaceResultsManager(getActivity(), adapter, eventKey, raceId, classId);
+    raceResultsManager = new RaceResultsManager(getActivity(), adapter, eventKey, raceIds);
     generateButtonTable(gridView, idType, sectionNumber, sortBy);
     return rootView;
   }
@@ -181,7 +179,7 @@ public class RaceInputFragment extends TabFragement {
     } else {
       b.setFinish(null);
     }
-    raceResultsManager.update(b, raceId);
+    raceResultsManager.update(b);
   }
 
   private void btnOnClick(int tab, Boat b) {
@@ -198,6 +196,6 @@ public class RaceInputFragment extends TabFragement {
         b.setFinish(new Date());
       }
     }
-    raceResultsManager.update(b, raceId);
+    raceResultsManager.update(b);
   }
 }

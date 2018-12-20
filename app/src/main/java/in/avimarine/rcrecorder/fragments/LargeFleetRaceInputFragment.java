@@ -13,10 +13,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import in.avimarine.rcrecorder.IdType;
+import in.avimarine.rcrecorder.R;
 import in.avimarine.rcrecorder.dao.BoatViewModel;
 import in.avimarine.rcrecorder.listadapters.CountryGridAdapter;
 import in.avimarine.rcrecorder.listadapters.NumbersGridAdapter;
-import in.avimarine.rcrecorder.R;
 import in.avimarine.rcrecorder.objects.Action;
 import in.avimarine.rcrecorder.objects.Boat;
 import in.avimarine.rcrecorder.objects.Country;
@@ -25,8 +25,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.TreeSet;
 
-public class LargeFleetRaceInputFragment extends TabFragement{
+public class LargeFleetRaceInputFragment extends TabFragement {
 
+  private static final String ARG_SECTION_NUMBER = "section_number";
   private List<Boat> list;
   private TreeSet<Country> countryList;
   private String selectedCountry = "";
@@ -34,7 +35,6 @@ public class LargeFleetRaceInputFragment extends TabFragement{
   private TextView sailNoTv;
   private TextView countryCodeTv;
   private int sectionNumber;
-  private static final String ARG_SECTION_NUMBER = "section_number";
   private BoatViewModel mBoatViewModel;
 
   @Nullable
@@ -44,17 +44,19 @@ public class LargeFleetRaceInputFragment extends TabFragement{
     super.onCreateView(inflater, container, savedInstanceState);
     View ret = inflater.inflate(R.layout.fragment_large_fleet_race_input, container, false);
 
-
     return ret;
   }
+
   @Override
-  public LargeFleetRaceInputFragment newInstance(int sectionNumber, String eventKey, int raceId, String classId) {
+  public LargeFleetRaceInputFragment newInstance(int sectionNumber, String eventKey,
+      ArrayList<Integer> raceId) {
     LargeFleetRaceInputFragment fragment = new LargeFleetRaceInputFragment();
     Bundle args = new Bundle();
     args.putInt(ARG_SECTION_NUMBER, sectionNumber);
     fragment.setArguments(args);
     return fragment;
   }
+
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
@@ -64,15 +66,16 @@ public class LargeFleetRaceInputFragment extends TabFragement{
     sailNoTv = v.findViewById(R.id.sail_no_tv);
     countryCodeTv = v.findViewById(R.id.country_code_tv);
     countryList = getCountries(list);
-    CountryGridAdapter adapter = new CountryGridAdapter(getActivity(), countryList.toArray(new Country[0]), sectionNumber,IdType.SAIL_NO);
+    CountryGridAdapter adapter = new CountryGridAdapter(getActivity(),
+        countryList.toArray(new Country[0]), sectionNumber, IdType.SAIL_NO);
     gridView.setAdapter(adapter);
 
     gridView.setOnItemClickListener((parent, view, position, id) -> {
       final Country c = (Country) parent.getItemAtPosition(position);
-      countryBtnOnClick(sectionNumber, c,v.findViewById(R.id.country_code_tv));
+      countryBtnOnClick(sectionNumber, c, v.findViewById(R.id.country_code_tv));
       RelativeLayout rl = view.findViewById(R.id.gridItem);
     });
-    setNumberPadLayout(v.findViewById(R.id.numbers_grid),sailNoTv);
+    setNumberPadLayout(v.findViewById(R.id.numbers_grid), sailNoTv);
     Button setBtn = v.findViewById(R.id.set_btn);
     setBtn.setOnClickListener(setBtnClick());
     mBoatViewModel = ViewModelProviders.of(this).get(BoatViewModel.class);
@@ -85,14 +88,14 @@ public class LargeFleetRaceInputFragment extends TabFragement{
 
   private OnClickListener setBtnClick() {
     return view -> {
-        String sailNo = selectedCountry+selectedSailNo;
-        Boat b = getBoat(list, sailNo);
-        if (b!=null) {
-          btnOnClick(sectionNumber,b);
-          clearTvs();
-          return;
-        }
-      Toast.makeText(getActivity(),"Could not find boat",Toast.LENGTH_SHORT).show();
+      String sailNo = selectedCountry + selectedSailNo;
+      Boat b = getBoat(list, sailNo);
+      if (b != null) {
+        btnOnClick(sectionNumber, b);
+        clearTvs();
+        return;
+      }
+      Toast.makeText(getActivity(), "Could not find boat", Toast.LENGTH_SHORT).show();
     };
   }
 
@@ -121,10 +124,10 @@ public class LargeFleetRaceInputFragment extends TabFragement{
   }
 
   private Boat getBoat(List<Boat> list, String sailNo) {
-    String clearSailNo = sailNo.replace("-", "").replace(" ","");
-    for (Boat b: list){
-      String checkedSailNo = b.getSailNo().replace("-", "").replace(" ","");
-      if (checkedSailNo.equals(clearSailNo)){
+    String clearSailNo = sailNo.replace("-", "").replace(" ", "");
+    for (Boat b : list) {
+      String checkedSailNo = b.getSailNo().replace("-", "").replace(" ", "");
+      if (checkedSailNo.equals(clearSailNo)) {
         return b;
       }
     }
@@ -133,10 +136,12 @@ public class LargeFleetRaceInputFragment extends TabFragement{
 
   private TreeSet<Country> getCountries(List<Boat> list) {
     TreeSet<Country> ret = new TreeSet<>();
-    if (list == null)
+    if (list == null) {
       return ret;
-    for (Boat b:list){
-      ret.add(new Country(getCountryCode(b.getSailNo()),getCountryName(getCountryCode(b.getSailNo()))));
+    }
+    for (Boat b : list) {
+      ret.add(new Country(getCountryCode(b.getSailNo()),
+          getCountryName(getCountryCode(b.getSailNo()))));
     }
 
     return ret;
@@ -148,32 +153,34 @@ public class LargeFleetRaceInputFragment extends TabFragement{
   }
 
   private String getCountryCode(String sailNo) {
-    return sailNo.substring(0,3);
+    return sailNo.substring(0, 3);
   }
+
   private void countryBtnOnClick(int tab, Country c, TextView tv) {
     String countryCode = c.code;
     selectedCountry = countryCode;
     tv.setText(countryCode + '-');
   }
 
-  private void setNumberPadLayout(GridView gv, TextView tv){
+  private void setNumberPadLayout(GridView gv, TextView tv) {
     ArrayList<Action> actions = createActionList();
-    NumbersGridAdapter adapter = new NumbersGridAdapter(getActivity(), actions.toArray(new Action[actions.size()]), sectionNumber);
+    NumbersGridAdapter adapter = new NumbersGridAdapter(getActivity(),
+        actions.toArray(new Action[actions.size()]), sectionNumber);
     gv.setAdapter(adapter);
 
     gv.setOnItemClickListener((parent, view, position, id) -> {
       final Action a = (Action) parent.getItemAtPosition(position);
-      numberBtnOnClick(sectionNumber, a.number,tv);
+      numberBtnOnClick(sectionNumber, a.number, tv);
     });
   }
 
   private void numberBtnOnClick(int i, int a, TextView tv) {
-    if (a==-2){
-      if(selectedSailNo.length()>0) {
+    if (a == -2) {
+      if (selectedSailNo.length() > 0) {
         selectedSailNo = selectedSailNo.substring(0, selectedSailNo.length() - 1);
       }
     }
-    if (a>=0){
+    if (a >= 0) {
       selectedSailNo += a;
     }
     tv.setText(selectedSailNo);
@@ -181,18 +188,18 @@ public class LargeFleetRaceInputFragment extends TabFragement{
 
   private ArrayList<Action> createActionList() {
     ArrayList<Action> ret = new ArrayList<>();
-    ret.add(new Action("1",1));
-    ret.add(new Action("2",2));
-    ret.add(new Action("3",3));
-    ret.add(new Action("4",4));
-    ret.add(new Action("5",5));
-    ret.add(new Action("6",6));
-    ret.add(new Action("7",7));
-    ret.add(new Action("8",8));
-    ret.add(new Action("9",9));
-    ret.add(new Action("",-1));
-    ret.add(new Action("0",0));
-    ret.add(new Action("<-",-2));
+    ret.add(new Action("1", 1));
+    ret.add(new Action("2", 2));
+    ret.add(new Action("3", 3));
+    ret.add(new Action("4", 4));
+    ret.add(new Action("5", 5));
+    ret.add(new Action("6", 6));
+    ret.add(new Action("7", 7));
+    ret.add(new Action("8", 8));
+    ret.add(new Action("9", 9));
+    ret.add(new Action("", -1));
+    ret.add(new Action("0", 0));
+    ret.add(new Action("<-", -2));
     return ret;
   }
 }

@@ -34,6 +34,9 @@ public interface BoatDao {
   @Query("SELECT * FROM boat WHERE event_key LIKE :eventId AND class_id LIKE :classId")
   LiveData<List<Boat>> findByEventKeyAndClassId(String eventId, String classId);
 
+  @Query("SELECT * FROM boat WHERE event_key LIKE :eventId AND class_id IN (:classId)")
+  LiveData<List<Boat>> findByEventKeyAndClassIds(String eventId, String[] classId);
+
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   void insertAll(Boat... boats);
 

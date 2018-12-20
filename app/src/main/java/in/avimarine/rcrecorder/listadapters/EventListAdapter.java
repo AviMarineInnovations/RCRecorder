@@ -9,7 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import in.avimarine.rcrecorder.R;
 import in.avimarine.rcrecorder.objects.Event;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

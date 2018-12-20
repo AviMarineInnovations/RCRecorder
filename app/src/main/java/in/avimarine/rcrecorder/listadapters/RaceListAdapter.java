@@ -30,7 +30,7 @@ public class RaceListAdapter extends ArrayAdapter<Race> {
   public View getView(int position, View convertView, @NonNull ViewGroup parent) {
     LayoutInflater inflater = (LayoutInflater) context
         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    View rowView = inflater.inflate(R.layout.list_item, parent, false);
+    View rowView = inflater.inflate(R.layout.race_list_item, parent, false);
     TextView firstLine = rowView.findViewById(R.id.firstLine);
     TextView secondLine = rowView.findViewById(R.id.secondLine);
     firstLine.setText(Objects.requireNonNull(getItem(position)).raceName);

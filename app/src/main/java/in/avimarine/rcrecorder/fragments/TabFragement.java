@@ -10,5 +10,5 @@ import java.util.ArrayList;
  * 06/10/2018.
  */
 public abstract class TabFragement extends Fragment {
-  public abstract TabFragement newInstance(int sectionNumber, String eventKey, int raceId, String classId);
+  public abstract TabFragement newInstance(int sectionNumber, String eventKey, ArrayList<Integer> raceId);
 }

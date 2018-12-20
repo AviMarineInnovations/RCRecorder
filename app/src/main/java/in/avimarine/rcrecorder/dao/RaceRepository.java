@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 import in.avimarine.rcrecorder.objects.Race;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,6 +46,9 @@ public class RaceRepository {
   public LiveData<List<Race>> getRacesByEventKey(String eventKey) {
     return mRaceDao.findByEventKey(eventKey);
   }
+  public LiveData<List<Race>> getRacesByRaceIds(String eventKey, int[] raceIds) {
+    return mRaceDao.findByRaceIds(eventKey,raceIds);
+  }
 
   private static class insertAsyncTask extends AsyncTask<Race, Void, Void> {
 
@@ -74,7 +78,6 @@ public class RaceRepository {
       return null;
     }
   }
-
   private static class removeAllAsyncTask extends AsyncTask<Void, Void, Void> {
 
     private RaceDao mAsyncTaskDao;
@@ -89,7 +92,6 @@ public class RaceRepository {
       return null;
     }
   }
-
   private class updateAsyncTask extends AsyncTask<Race, Void, Void>{
 
     private RaceDao mAsyncTaskDao;

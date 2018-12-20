@@ -3,11 +3,16 @@ package in.avimarine.rcrecorder;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import in.avimarine.rcrecorder.dao.BoatViewModel;
+import in.avimarine.rcrecorder.dao.RaceViewModel;
 import in.avimarine.rcrecorder.dao.ResultViewModel;
+import in.avimarine.rcrecorder.general.Utils;
 import in.avimarine.rcrecorder.listadapters.BoatGridAdapter;
 import in.avimarine.rcrecorder.objects.Boat;
+import in.avimarine.rcrecorder.objects.Race;
 import in.avimarine.rcrecorder.objects.Result;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -17,28 +22,41 @@ import java.util.List;
  */
 public class RaceResultsManager {
 
+  private static final String TAG = "RaceResultsManager";
   List<Result> results;
   List<Boat> boats;
+  List<Race> races;
   private BoatViewModel mBoatViewModel;
   private ResultViewModel mResultViewModel;
+  private RaceViewModel mRaceViewModel;
   private BoatGridAdapter adapter;
   private FragmentActivity fa;
 
 
   public RaceResultsManager(FragmentActivity a, BoatGridAdapter adapter, String eventId,
-      int raceId, String classId) {
+      ArrayList<Integer> raceIds) {
     this.adapter = adapter;
     this.fa = a;
     mBoatViewModel = ViewModelProviders.of(fa).get(BoatViewModel.class);
     mResultViewModel = ViewModelProviders.of(fa).get(ResultViewModel.class);
-    mBoatViewModel.getBoatsByEventIdAndClassId(eventId,classId).observe(fa, boats -> {
+    mRaceViewModel = ViewModelProviders.of(fa).get(RaceViewModel.class);
+
+    mResultViewModel.getResultsByEventAndRaceIds(eventId, Utils.getIntArray(raceIds))
+        .observe(a, results -> {
+          // Update the cached copy of the boats in the adapter.
+          this.results = results;
+          notifyUpdate();
+        });
+
+    mRaceViewModel.getRacesByRaceIds(eventId, Utils.getIntArray(raceIds)).observe(a, results -> {
       // Update the cached copy of the boats in the adapter.
-      this.boats = boats;
-      notifyUpdate();
-    });
-    mResultViewModel.getResultsByEventAndRaceId(eventId, raceId).observe(a, results -> {
-      // Update the cached copy of the boats in the adapter.
-      this.results = results;
+      this.races = results;
+      mBoatViewModel.getBoatsByEventIdAndClassIds(eventId, Utils.getStringArray(getClassIds(races)))
+          .observe(fa, boats -> {
+            // Update the cached copy of the boats in the adapter.
+            this.boats = boats;
+            notifyUpdate();
+          });
       notifyUpdate();
     });
   }
@@ -50,6 +68,14 @@ public class RaceResultsManager {
       }
     }
     return null;
+  }
+
+  private List<String> getClassIds(List<Race> races) {
+    List<String> ret = new ArrayList<>();
+    for (Race r : races) {
+      ret.add(r.classId);
+    }
+    return ret;
   }
 
   private synchronized void notifyUpdate() {
@@ -67,18 +93,24 @@ public class RaceResultsManager {
     }
 
   }
+
   private void sendTabAndSortBroadcast() {
     Intent intent = new Intent("TABANDSORT");
     fa.sendBroadcast(intent);
   }
 
-  public void update(Boat b, int raceId) {
+  public void update(Boat b) {
     Result r = findByYachtId(results, b.getYachtId());
     boolean newR = false;
     if (r == null) {
       newR = true;
       r = new Result();
       r.setYachtId(b.getYachtId());
+      int raceId = getRaceId(b);
+      if (raceId < 0) {
+        Log.e(TAG, "race id not found");
+        throw new UnsupportedOperationException("RaceId not found");
+      }
       r.setRaceId(raceId);
       r.setEventKey(b.getEventKey());
       r.setSailNo(b.getSailNo());
@@ -93,5 +125,15 @@ public class RaceResultsManager {
     }
     mBoatViewModel.update(b);
   }
+
+  private int getRaceId(Boat b) {
+    for (Race r : races) {
+      if (r.classId == b.getClassId()) {
+        return r.orcRaceId;
+      }
+    }
+    return -1;
+  }
 }
+
 

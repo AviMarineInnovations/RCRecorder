@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 import in.avimarine.rcrecorder.objects.Boat;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,6 +49,9 @@ public class BoatRepository {
 
   public LiveData<List<Boat>> getBoatsByEventIdAndClassId(String eventId, String classId) {
     return mBoatDao.findByEventKeyAndClassId(eventId,classId);
+  }
+  public LiveData<List<Boat>> getBoatsByEventIdAndClassIds(String eventId, String[] classIds) {
+    return mBoatDao.findByEventKeyAndClassIds(eventId,classIds);
   }
 
   private static class insertAsyncTask extends AsyncTask<Boat, Void, Void> {

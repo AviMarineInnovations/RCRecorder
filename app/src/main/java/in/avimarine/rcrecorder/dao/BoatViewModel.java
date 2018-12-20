@@ -4,6 +4,8 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import in.avimarine.rcrecorder.objects.Boat;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,6 +38,10 @@ import java.util.List;
 
   public LiveData<List<Boat>> getBoatsByEventIdAndClassId(String eventId, String classId) {
     return mRepository.getBoatsByEventIdAndClassId(eventId,classId);
+  }
+
+  public LiveData<List<Boat>> getBoatsByEventIdAndClassIds(String eventId,String[] classIds) {
+    return mRepository.getBoatsByEventIdAndClassIds(eventId,classIds);
   }
 }
 

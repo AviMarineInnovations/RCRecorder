@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import in.avimarine.rcrecorder.IdType;
 import in.avimarine.rcrecorder.R;
+//import in.avimarine.rcrecorder.fragments.LargeFleetRaceInputFragment;
 import in.avimarine.rcrecorder.fragments.LargeFleetRaceInputFragment;
 import in.avimarine.rcrecorder.fragments.RaceInputFragment;
 import in.avimarine.rcrecorder.fragments.TabFragement;
@@ -40,7 +41,7 @@ public class RaceInputActivity extends AppCompatActivity {
   protected static int radioId = R.id.identification_radio_sailno;
   protected static IdType sortBy = IdType.SAIL_NO;
   private String eventKey;
-  private int raceId;
+  private ArrayList<Integer> raceIds;
   private String classId;
 //  protected static UpdateInitiator ui;
 
@@ -50,8 +51,7 @@ public class RaceInputActivity extends AppCompatActivity {
     setContentView(R.layout.activity_race_input);
     Bundle b = this.getIntent().getExtras();
     eventKey = b.getString("EVENTKEY");
-    raceId = b.getInt("RACEID");
-    classId = b.getString("CLASSID");
+    raceIds = b.getIntegerArrayList("RACEIDS");
     int fragement = 1;
 //    try {//TODO return when ready for big input activity
 //      fragement = b.getInt(FRAGMENTCLASS);
@@ -121,7 +121,7 @@ public class RaceInputActivity extends AppCompatActivity {
         b.putInt(FRAGMENTCLASS, 0);
       }
       b.putString("EVENTKEY",eventKey);
-      b.putInt("RACEID",raceId);
+      b.putIntegerArrayList("RACEID",raceIds);
       b.putString("CLASSID",classId);
       mIntent.putExtras(b);
       finish();
@@ -165,7 +165,7 @@ public class RaceInputActivity extends AppCompatActivity {
     public Fragment getItem(int position) {
       // getItem is called to instantiate the fragment for the given page.
       try {
-        return fragementClass.newInstance().newInstance(position + 1,eventKey,raceId, classId);
+        return fragementClass.newInstance().newInstance(position + 1,eventKey,raceIds);
       } catch (InstantiationException | IllegalAccessException e) {
         Log.e(TAG,"Instantiation error",e);
       }

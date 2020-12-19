@@ -8,7 +8,7 @@ import org.simpleframework.xml.Root;
  * This file is part of an Avi Marine Innovations project: RaceCommittee first created by aayaffe on
  * 01/10/2018.
  */
-@Root(name = "ROW")
+@Root(name = "ROW", strict = false)
 public class RaceRow {
   @Element (required = false)
   public int RaceId;

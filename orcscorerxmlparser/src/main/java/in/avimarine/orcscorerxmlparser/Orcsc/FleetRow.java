@@ -10,7 +10,7 @@ import org.simpleframework.xml.convert.Convert;
  * This file is part of an Avi Marine Innovations project: RaceCommittee first created by aayaffe on
  * 01/10/2018.
  */
-@Root(name = "ROW")
+@Root(name = "ROW", strict = false)
 public class FleetRow {
   @Element (required = false)
   public String SailNo;

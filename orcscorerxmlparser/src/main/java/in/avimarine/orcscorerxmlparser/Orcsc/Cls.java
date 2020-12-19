@@ -13,7 +13,7 @@ class Cls {
   @ElementList(inline = true)
   private List<ClsRow> list;
 }
-@Root (name = "ROW")
+@Root (name = "ROW", strict = false)
 class ClsRow {
   @Element (required = false)
   String ClassId;

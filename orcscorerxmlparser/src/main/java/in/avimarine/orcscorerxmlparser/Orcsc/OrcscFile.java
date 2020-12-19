@@ -1,5 +1,6 @@
 package in.avimarine.orcscorerxmlparser.Orcsc;
 
+import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
@@ -9,8 +10,12 @@ import org.simpleframework.xml.Root;
  * 01/10/2018.
  */
 
-@Root (name = "event")
+@Root (name = "event", strict=false)
 public class OrcscFile {
+  @Attribute (name="filename")
+  public String filename;
+  @Attribute (name="applicationversion")
+  public String appVersion;
   @Element (name = "Event")
   public Event event;
   @Element (name = "Fleet", required = false)

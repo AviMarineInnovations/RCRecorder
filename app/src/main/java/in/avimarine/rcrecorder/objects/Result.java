@@ -13,8 +13,8 @@ import java.util.Date;
 @Entity(primaryKeys = {"race_id", "yacht_id", "event_key"})
 public class Result {
 
-  @ColumnInfo(name = "sail_no")
-  private String SailNo;
+//  @ColumnInfo(name = "sail_no")
+//  private String SailNo;
   @ColumnInfo(name = "yacht_id")
   private int yachtId;
   @ColumnInfo(name = "race_id")
@@ -62,13 +62,13 @@ public class Result {
     this.finishTime = finishTime;
   }
 
-  public String getSailNo() {
-    return SailNo;
-  }
-
-  public void setSailNo(String sailNo) {
-    SailNo = sailNo;
-  }
+//  public String getSailNo() {
+//    return SailNo;
+//  }
+//
+//  public void setSailNo(String sailNo) {
+//    SailNo = sailNo;
+//  }
 
   public Date getCheckIn() {
     return checkIn;

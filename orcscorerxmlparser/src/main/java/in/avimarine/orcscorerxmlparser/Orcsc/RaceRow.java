@@ -21,7 +21,7 @@ public class RaceRow {
   @Element (required = false)
   public double Distance;
   @Element (required = false)
-  public int CourseId;
+  public String CourseId;
   @Element (required = false)
   public boolean Provisional;
   @Element (required = false)

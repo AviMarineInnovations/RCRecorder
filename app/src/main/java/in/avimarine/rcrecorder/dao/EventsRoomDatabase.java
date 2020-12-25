@@ -14,7 +14,7 @@ import in.avimarine.rcrecorder.objects.Result;
  * This file is part of an Avi Marine Innovations project: RaceCommittee first created by aayaffe on
  * 06/10/2018.
  */
-@Database(entities = {Boat.class, Event.class, Race.class, Result.class}, version = 3, exportSchema = false)
+@Database(entities = {Boat.class, Event.class, Race.class, Result.class}, version = 5, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class EventsRoomDatabase extends RoomDatabase {
   public abstract BoatDao boatDao();
@@ -30,6 +30,7 @@ public abstract class EventsRoomDatabase extends RoomDatabase {
         if (instance == null) {
           instance = Room.databaseBuilder(context.getApplicationContext(),
               EventsRoomDatabase.class, "events_database")
+                  .fallbackToDestructiveMigration()
               .build();
         }
       }

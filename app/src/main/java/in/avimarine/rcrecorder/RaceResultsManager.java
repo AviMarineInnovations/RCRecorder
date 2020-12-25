@@ -113,9 +113,13 @@ public class RaceResultsManager {
       }
       r.setRaceId(raceId);
       r.setEventKey(b.getEventKey());
-      r.setSailNo(b.getSailNo());
+//      r.setSailNo(b.getSailNo());
+
     }
     r.setFinishTime(b.getFinish());
+    if (r.getFinish()==null){
+      r.setFinish(FinishType.OK);
+    }
     r.setOCS(b.getOCS());
     r.setCheckIn(b.getCheckIn());
     if (newR) {
@@ -128,7 +132,7 @@ public class RaceResultsManager {
 
   private int getRaceId(Boat b) {
     for (Race r : races) {
-      if (r.classId == b.getClassId()) {
+      if (r.classId.equals(b.getClassId())) {
         return r.orcRaceId;
       }
     }

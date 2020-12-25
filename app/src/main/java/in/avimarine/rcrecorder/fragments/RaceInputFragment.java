@@ -69,10 +69,7 @@ public class RaceInputFragment extends TabFragement {
       @Override
       public void onReceive(Context context, Intent intent) {
         Bundle b = intent.getExtras();
-        if (b == null) {
-          Log.e(TAG, "intent is null in receiver");
-        }
-        else {
+        if (b != null)  {
           String sortByString = b.getString("SORTBY");
           sortBy = IdType.valueOf(sortByString);
         }

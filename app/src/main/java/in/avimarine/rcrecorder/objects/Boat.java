@@ -15,7 +15,7 @@ public class Boat {
 
   @ColumnInfo(name = "ref_no")
   private String RefNo;
-  @PrimaryKey
+
   @ColumnInfo(name = "sail_no")
   @NonNull
   private String SailNo;
@@ -35,6 +35,7 @@ public class Boat {
   private Date finish;
   @ColumnInfo(name = "event_key")
   private String eventKey;
+  @PrimaryKey
   @ColumnInfo(name = "yacht_id")
   private int yachtId;
   @ColumnInfo(name = "class_id")

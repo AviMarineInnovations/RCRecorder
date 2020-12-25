@@ -52,12 +52,12 @@ public class RaceInputActivity extends AppCompatActivity {
     Bundle b = this.getIntent().getExtras();
     eventKey = b.getString("EVENTKEY");
     raceIds = b.getIntegerArrayList("RACEIDS");
-    int fragement = 1;
-//    try {//TODO return when ready for big input activity
-//      fragement = b.getInt(FRAGMENTCLASS);
-//    }catch (Exception e) {
-//      Log.d(TAG,"No FRAGMENT_CLASS value available");
-//    }
+    int fragement = 0;
+    try {//TODO return when ready for big input activity
+      fragement = b.getInt(FRAGMENTCLASS);
+    }catch (Exception e) {
+      Log.d(TAG,"No FRAGMENT_CLASS value available");
+    }
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);

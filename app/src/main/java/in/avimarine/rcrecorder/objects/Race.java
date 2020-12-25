@@ -28,7 +28,7 @@ public class Race implements Parcelable {
   @ColumnInfo(name = "distance")
   public double distance;
   @ColumnInfo(name = "course_id")
-  public int courseId;
+  public String courseId;
   @ColumnInfo(name = "provisional")
   public boolean provisional;
   @ColumnInfo(name = "scoring_tyoe")
@@ -53,7 +53,7 @@ public class Race implements Parcelable {
     p.writeLong(start.getTime());
     p.writeString(classId);
     p.writeDouble(distance);
-    p.writeInt(courseId);
+    p.writeString(courseId);
     p.writeByte((byte) (provisional ? 1 : 0));
     p.writeInt(scoringType);
     p.writeByte((byte) (discardable ? 1 : 0));
@@ -72,7 +72,7 @@ public class Race implements Parcelable {
           boat.start = new Date(in.readLong());
           boat.classId = in.readString();
           boat.distance = in.readDouble();
-          boat.courseId = in.readInt();
+          boat.courseId = in.readString();
           boat.provisional = in.readByte() != 0;
           boat.scoringType =  in.readInt();
           boat.discardable = in.readByte() != 0;

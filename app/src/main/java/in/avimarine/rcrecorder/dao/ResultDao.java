@@ -29,8 +29,8 @@ public interface ResultDao {
   @Query("SELECT * FROM result WHERE yacht_id LIKE :yachtId")
   LiveData<List<Result>> findByYachtId(int yachtId);
 
-  @Query("SELECT * FROM result WHERE sail_no LIKE :sailNo")
-  LiveData<List<Result>> findBySailNo(String sailNo);
+//  @Query("SELECT * FROM result WHERE sail_no LIKE :sailNo")
+//  LiveData<List<Result>> findBySailNo(String sailNo);
 
   @Query("SELECT * FROM result WHERE event_key LIKE :eventId AND race_id LIKE :raceId")
   LiveData<List<Result>> findByEventKeyAndRaceId(String eventId, int raceId);
